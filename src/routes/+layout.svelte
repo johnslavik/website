@@ -17,12 +17,7 @@
 	src={Hero}
 	alt=""
 />
-<div
-	id="container"
-	class="mt-[calc(var(--shrunk-banner-height)+min(8%,2rem))] flex w-full flex-wrap items-center justify-evenly gap-16 p-[min(5rem,8%)]"
->
-	{@render children()}
-</div>
+{@render children()}
 
 <style>
 	:root {
