@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { prefersReducedMotion } from 'svelte/motion';
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	let envelopeVisible = $state(false);
 </script>
 

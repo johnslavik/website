@@ -21,8 +21,7 @@
 
 <style>
 	:root {
-		--shrunk-banner-height: max(38vh, 35rem);
-		--shrunk-banner-width: 85rem;
+		--shrunk-banner-height: max(35vh, 12rem);
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
