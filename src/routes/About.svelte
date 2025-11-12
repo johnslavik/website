@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { prefersReducedMotion } from 'svelte/motion';
-	import { slide } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	let envelopeVisible = $state(false);
 </script>
 
@@ -13,7 +13,7 @@
 			I build reliable software, teach programming, and contribute to open source.<br />
 			<strong>
 				<i>
-					Curious about collaboration?
+					Curious about collaboration?<br>
 					<a
 						onmouseenter={() => (envelopeVisible = true)}
 						onmouseleave={() => (envelopeVisible = false)}
@@ -25,7 +25,7 @@
 						Let’s talk!
 					</a>
 					{#if envelopeVisible}
-						<span transition:slide={{ duration: 1000 }}>
+						<span transition:fade={{ duration: 1000 }}>
 							<Icon
 								width="32"
 								icon={prefersReducedMotion.current ? 'mdi:email' : 'line-md:email'}

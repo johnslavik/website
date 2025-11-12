@@ -21,7 +21,7 @@
 
 <style>
 	:root {
-		--shrunk-banner-height: min(38vh, 35rem);
+		--shrunk-banner-height: max(38vh, 35rem);
 		--shrunk-banner-width: 85rem;
 	}
 
