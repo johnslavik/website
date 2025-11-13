@@ -8,6 +8,5 @@
     @apply flex flex-col;
     @apply bg-gray-50;
     @apply min-h-screen;
-    @apply not-sm:justify-end;
   }
 }
