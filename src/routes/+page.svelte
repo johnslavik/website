@@ -14,10 +14,10 @@
 
 <main class="relative grid min-h-60 w-screen not-sm:grid-rows-[auto_1fr] sm:grid-cols-[auto_1fr]">
 	<About />
-	<div class="relative flex min-h-60 w-full min-w-82 overflow-hidden sm:justify-end">
+	<div class="relative flex min-h-60 w-full min-w-70 overflow-hidden sm:justify-end">
 		<article
 			id="socials"
-			class="fixed prose prose-sm py-8 not-sm:absolute not-sm:right-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 sm:rounded-t-[30%]"
+			class="fixed prose prose-sm py-8 ml-8 not-sm:absolute not-sm:right-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 sm:rounded-t-[30%]"
 		>
 			<Socials />
 		</article>
