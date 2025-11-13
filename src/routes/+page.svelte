@@ -20,7 +20,7 @@
 	<div class="relative flex min-h-60 w-full min-w-82 overflow-hidden sm:justify-end">
 		<article
 			id="socials"
-			class="fixed not-sm:absolute prose prose-sm py-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 not-sm:right-8 sm:rounded-t-[30%]"
+			class="fixed prose prose-sm py-8 not-sm:absolute not-sm:right-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 sm:rounded-t-[30%]"
 		>
 			<Socials />
 		</article>
@@ -30,6 +30,13 @@
 			src={Hero}
 			alt=""
 		/>
+		<i class="absolute right-2 bottom-2 prose prose-sm text-xs mix-blend-difference prose-invert text-shadow-2xs">
+			Image courtesy of <a
+				href="https://alicjabokina.com/"
+				rel="noopener noreferrer"
+				aria-label="attribution">Alicja Bokina</a
+			>
+		</i>
 	</div>
 </div>
 
@@ -39,7 +46,7 @@
 
 	@media (max-height: 30rem) and (min-width: 40rem) {
 		#socials {
-			@apply absolute right-8 top-0 justify-self-end mix-blend-difference prose-invert;
+			@apply absolute top-0 right-8 justify-self-end mix-blend-difference prose-invert;
 		}
 	}
 
