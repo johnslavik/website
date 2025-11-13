@@ -12,7 +12,7 @@
 
 <!-- You can tell this took me a lot of time to get right ;) -->
 
-<div class="relative grid w-screen h-screen min-h-60 sm:grid-cols-[auto_1fr] not-sm:grid-rows-[auto_1fr]">
+<div id="wrapper" class="relative grid w-screen min-h-60 sm:grid-cols-[auto_1fr] not-sm:grid-rows-[auto_1fr]">
 	<About />
 	<div class="relative flex w-full justify-center sm:justify-end overflow-hidden min-w-82">
 		<article
@@ -38,5 +38,11 @@
 		#socials {
 			@apply absolute top-0 mix-blend-difference prose-invert;
 		}
+	}
+
+	#wrapper {
+		height: 100vh;
+		height: 100svh;
+		height: 100dvh;
 	}
 </style>
