@@ -4,7 +4,7 @@
 </script>
 
 <div
-	class="z-10 mx-auto flex flex-wrap items-center justify-evenly gap-16 p-[min(2rem,8%)] lg:w-(--banner-w)"
+	class="mx-auto flex flex-wrap items-center justify-evenly gap-16 p-[min(2rem,8%)] lg:w-(--banner-w)"
 >
 	<article class="prose break-normal prose-a:font-bold">
 		<h1>Bartosz Sławecki</h1>
