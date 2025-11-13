@@ -12,18 +12,21 @@
 
 <!-- You can tell this took me a lot of time to get right ;) -->
 
-<div id="wrapper" class="relative grid w-screen min-h-60 sm:grid-cols-[auto_1fr] not-sm:grid-rows-[auto_1fr]">
+<div
+	id="wrapper"
+	class="relative grid min-h-60 w-screen not-sm:grid-rows-[auto_1fr] sm:grid-cols-[auto_1fr]"
+>
 	<About />
-	<div class="relative flex w-full justify-center sm:justify-end overflow-hidden min-w-82">
+	<div class="relative flex min-h-60 w-full min-w-82 overflow-hidden sm:justify-end">
 		<article
 			id="socials"
-			class="absolute left-8 prose prose-sm py-8 not-sm:top-0 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:fixed sm:bottom-0 sm:rounded-t-[30%]"
+			class="fixed not-sm:absolute prose prose-sm py-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 not-sm:right-8 sm:rounded-t-[30%]"
 		>
 			<Socials />
 		</article>
 		<enhanced:img
 			id="hero"
-			class="h-[75vh] object-cover transition-all duration-300 sm:size-full"
+			class="h-[70vh] object-cover transition-all duration-300 sm:size-full"
 			src={Hero}
 			alt=""
 		/>
@@ -36,7 +39,7 @@
 
 	@media (max-height: 30rem) and (min-width: 40rem) {
 		#socials {
-			@apply absolute top-0 mix-blend-difference prose-invert;
+			@apply absolute right-8 top-0 justify-self-end mix-blend-difference prose-invert;
 		}
 	}
 
