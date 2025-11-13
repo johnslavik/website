@@ -15,12 +15,12 @@
 	<div class="relative flex w-full justify-center overflow-clip">
 		<article
 			id="socials"
-			class="absolute left-8 prose not-sm:prose-invert not-sm:mix-blend-difference prose-sm py-8 not-sm:top-0 not-sm:rounded-b-[30%] not-sm:p-4 sm:fixed sm:bottom-0 sm:rounded-t-[30%]"
+			class="absolute left-8 prose prose-sm py-8 not-sm:top-0 not-sm:rounded-b-[30%] not-sm:p-4 not-sm:mix-blend-difference not-sm:prose-invert sm:fixed sm:bottom-0 sm:rounded-t-[30%]"
 		>
 			<Socials />
 		</article>
 		<enhanced:img
-			class="size-full w-screen object-cover transition-all duration-300 not-sm:h-[50vh]"
+			class="not-sm:h-[50vh,50svh] size-full w-screen object-cover transition-all duration-300"
 			src={Hero}
 			alt=""
 		/>
