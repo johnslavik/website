@@ -20,7 +20,8 @@
 			<Socials />
 		</article>
 		<enhanced:img
-			class="not-sm:h-[50vh,50dvh] size-full w-screen object-cover transition-all duration-300"
+			id="hero"
+			class="size-full w-screen object-cover transition-all duration-300"
 			src={Hero}
 			alt=""
 		/>
@@ -35,5 +36,13 @@
 		#socials {
 			@apply absolute top-0 mix-blend-difference prose-invert;
 		}
+	}
+
+	@media not (width >= 40rem) {
+		#hero {
+			height: 50vh;
+			height: 50dvh;
+		}
+
 	}
 </style>
