@@ -41,9 +41,9 @@
 	@reference 'tailwindcss';
 	@plugin '@tailwindcss/typography';
 
-	@media (max-height: 30rem) and (min-width: 40rem) {
+	@media (max-height: 36rem) and (min-width: 40rem) {
 		#socials {
-			@apply absolute top-0 right-8 justify-self-end mix-blend-difference prose-invert;
+			@apply absolute -top-4 right-2 justify-self-end mix-blend-difference prose-invert;
 		}
 	}
 

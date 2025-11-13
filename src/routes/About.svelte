@@ -1,7 +1,7 @@
 <div
 	class="mx-auto flex flex-wrap items-center justify-evenly gap-16 sm:px-16 p-[min(2rem,8%)]"
 >
-	<article class="prose leading-loose break-normal prose-a:font-bold prose-a:no-underline">
+	<article class="prose text-center leading-loose break-normal prose-a:font-bold prose-a:no-underline">
 		<h1>Bartosz Sławecki</h1>
 
 		<p>I build reliable software, teach programming, and contribute to open source.</p>
