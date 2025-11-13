@@ -20,7 +20,7 @@
 			<Socials />
 		</article>
 		<enhanced:img
-			class="not-sm:h-[50vh,50svh] size-full w-screen object-cover transition-all duration-300"
+			class="not-sm:h-[50vh,50dvh] size-full w-screen object-cover transition-all duration-300"
 			src={Hero}
 			alt=""
 		/>
