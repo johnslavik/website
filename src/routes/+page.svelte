@@ -30,7 +30,7 @@
 			src={Hero}
 			alt=""
 		/>
-		<i class="absolute right-2 bottom-2 prose prose-sm text-xs mix-blend-difference prose-invert text-shadow-2xs">
+		<i class="absolute right-2 bottom-2 prose prose-sm text-xs bg-blend-lighten text-shadow-2xs">
 			Image courtesy of <a
 				href="https://alicjabokina.com/"
 				rel="noopener noreferrer"
