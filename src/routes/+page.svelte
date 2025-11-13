@@ -12,10 +12,7 @@
 
 <!-- You can tell this took me a lot of time to get right ;) -->
 
-<div
-	id="wrapper"
-	class="relative grid min-h-60 w-screen not-sm:grid-rows-[auto_1fr] sm:grid-cols-[auto_1fr]"
->
+<main class="relative grid min-h-60 w-screen not-sm:grid-rows-[auto_1fr] sm:grid-cols-[auto_1fr]">
 	<About />
 	<div class="relative flex min-h-60 w-full min-w-82 overflow-hidden sm:justify-end">
 		<article
@@ -38,7 +35,7 @@
 			>
 		</i>
 	</div>
-</div>
+</main>
 
 <style>
 	@reference 'tailwindcss';
@@ -50,7 +47,7 @@
 		}
 	}
 
-	#wrapper {
+	main {
 		height: 100vh;
 		height: 100svh;
 		height: 100dvh;
