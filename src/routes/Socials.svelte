@@ -14,7 +14,7 @@
 		><Icon
 			width="46"
 			icon={prefersReducedMotion.current ? 'mdi:linkedin' : 'line-md:linkedin'}
-			class="transition-all duration-500 hover:scale-105"
+			class="not-motion-reduce:transition-all duration-500 hover:scale-105"
 		/></a
 	>
 	<a
@@ -25,14 +25,14 @@
 		><Icon
 			width="46"
 			icon={prefersReducedMotion.current ? 'mdi:github' : 'line-md:github'}
-			class="transition-all duration-500 hover:scale-105"
+			class="not-motion-reduce:transition-all duration-500 hover:scale-105"
 		/></a
 	>
 	<!-- <a target="_blank" rel="noopener noreferrer" aria-label="Mastodon" href="https://fosstodon.org/@bswck"
 		><Icon
 			width="64"
 			icon={prefersReducedMotion.current ? "mdi:mastodon" : "line-md:mastodon"}
-			class="transition-all duration-500 hover:scale-105"
+			class="not-motion-reduce:transition-all duration-500 hover:scale-105"
 		/></a
 	> -->
 </nav>

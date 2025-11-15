@@ -1,56 +1,5 @@
 <script lang="ts">
-	import Hero from '$lib/assets/hero.jpg?enhanced';
-	import '../app.css';
-	import About from './About.svelte';
-	import Socials from './Socials.svelte';
-	const preloadSrcSet = Hero.sources.avif ?? Hero.sources.webp ?? Hero.sources.jpeg;
+	import Landing from "./Landing.svelte";
 </script>
 
-<svelte:head>
-	<link rel="preload" as="image" href={Hero.img.src} imagesrcset={preloadSrcSet} />
-</svelte:head>
-
-<!-- You can tell this took me a lot of time to get right ;) -->
-
-<main class="relative grid min-h-60 w-screen not-sm:grid-rows-[auto_1fr] sm:grid-cols-[auto_1fr]">
-	<About />
-	<div class="relative flex min-h-60 w-full min-w-70 overflow-hidden sm:justify-end">
-		<article
-			id="socials"
-			class="fixed prose prose-sm py-8 ml-8 not-sm:absolute not-sm:right-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 sm:rounded-t-[30%]"
-		>
-			<Socials />
-		</article>
-		<enhanced:img
-			id="hero"
-			class="h-[70vh] object-cover transition-all duration-300 sm:size-full"
-			src={Hero}
-			alt=""
-		/>
-		<i class="absolute right-2 bottom-2 prose prose-sm text-xs bg-blend-lighten text-shadow-2xs">
-			Image courtesy of <a
-				href="https://alicjabokina.com/"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="attribution">Alicja Bokina</a
-			>
-		</i>
-	</div>
-</main>
-
-<style>
-	@reference 'tailwindcss';
-	@plugin '@tailwindcss/typography';
-
-	@media (max-height: 36rem) and (min-width: 40rem) {
-		#socials {
-			@apply absolute -top-4 right-2 justify-self-end mix-blend-difference prose-invert;
-		}
-	}
-
-	main {
-		height: 100vh;
-		height: 100svh;
-		height: 100dvh;
-	}
-</style>
+<Landing />
