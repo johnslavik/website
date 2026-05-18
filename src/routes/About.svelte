@@ -8,6 +8,10 @@
 		<p>I build reliable software, teach programming, and contribute to open source.</p>
 
 		<span class="inline-block w-full text-center">
+			<a href="/blog" class="text-sm hover:underline">Blog</a>
+		</span>
+
+		<span class="inline-block w-full text-center">
 			<i>Curious about collaboration?</i><br />
 			<a
 				target="_blank"

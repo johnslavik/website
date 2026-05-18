@@ -1,0 +1,45 @@
+---
+title: "CPython's Specializing Adaptive Interpreter"
+date: "2026-05-18"
+description: "How CPython 3.11+ speeds up hot code paths by rewriting bytecode instructions at runtime to specialized variants."
+tags: ["python", "cpython", "internals", "performance"]
+---
+
+<script>
+  // nothing needed here yet
+</script>
+
+Since CPython 3.11, the interpreter has grown a specialization mechanism that quietly rewrites bytecode as it runs.
+The idea is simple: once the interpreter sees the same instruction hit the same types a few times in a row,
+it replaces the generic opcode with a *specialized* variant that skips the slow general-purpose dispatch.
+
+## How it works
+
+Every bytecode instruction starts life with a counter slot called `_specialization_counter`.
+Each time the instruction runs without specializing, the counter ticks down.
+When it hits zero, the interpreter's specializer kicks in and inspects the surrounding type information.
+If a suitable specialized opcode exists, the instruction is rewritten in-place.
+
+For example, `LOAD_ATTR` can become:
+
+- `LOAD_ATTR_SLOT` — attribute lives at a fixed slot offset on the instance
+- `LOAD_ATTR_MODULE` — attribute is in a module's dict with a known version
+- `LOAD_ATTR_METHOD_WITH_VALUES` — method lookup that skips the descriptor protocol
+
+## Why this matters
+
+The payoff is that the specialized opcodes do *much less work* than their generic counterparts.
+`LOAD_ATTR_SLOT` is effectively a struct field read; it doesn't touch the MRO, the descriptor protocol,
+or the instance dict — it just loads from a known offset and checks the object's type version tag.
+
+The version tag is the key safety valve: if the type ever changes (new attribute, `__class__` assignment, etc.),
+the tag bumps and the next execution deoptimizes back to the generic opcode.
+
+## Browsing the implementation
+
+If you want to read the code, start in `Python/specialize.c`.
+The per-opcode specialization logic lives there, each function named `_Py_Specialize_<Opcode>`.
+The adaptive opcode variants themselves are defined in `Python/ceval.c` alongside their generic siblings,
+with `#define ENABLE_SPECIALIZATION` guarding the specialization calls.
+
+It's one of those places in CPython where the engineering is worth reading even if you're not changing it.
