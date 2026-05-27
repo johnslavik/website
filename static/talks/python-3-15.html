@@ -391,6 +391,7 @@
     padding: .3rem 0;
   }
   body.deck .progress { display: flex; }
+  .progress { scroll-behavior: smooth; }
   .progress::-webkit-scrollbar { width: 0; }
   .progress .dot {
     width: 8px; height: 8px; border-radius: 50%;
@@ -1064,12 +1065,26 @@ asyncio REPL 3.14.1 (...)
     progress.appendChild(d);
   });
 
+  const ensureDotVisible = () => {
+    const dot = progress.children[active];
+    if (!dot) return;
+    const c = progress.getBoundingClientRect();
+    const d = dot.getBoundingClientRect();
+    const pad = 12;
+    if (d.top < c.top + pad) {
+      progress.scrollTop -= (c.top + pad) - d.top;
+    } else if (d.bottom > c.bottom - pad) {
+      progress.scrollTop += d.bottom - (c.bottom - pad);
+    }
+  };
+
   let active = 0;
   const setActive = i => {
     active = (i + slides.length) % slides.length;
     slides.forEach((s, j) => s.classList.toggle('active', j === active));
     progress.querySelectorAll('.dot').forEach((d, j) =>
       d.classList.toggle('active', j === active));
+    ensureDotVisible();
     counter.textContent = (active + 1) + ' / ' + slides.length;
     if (document.body.classList.contains('deck')) {
       window.scrollTo(0, 0);
@@ -1152,6 +1167,7 @@ asyncio REPL 3.14.1 (...)
           active = i;
           progress.querySelectorAll('.dot').forEach((d, j) =>
             d.classList.toggle('active', j === active));
+          ensureDotVisible();
           counter.textContent = (active + 1) + ' / ' + slides.length;
           if (history.replaceState) history.replaceState(null, '', '#' + ids[active]);
         }
