@@ -42,13 +42,6 @@
     border-bottom: 1px solid var(--border);
     font-size: .85rem;
   }
-  .topbar .brand {
-    font-family: var(--mono);
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .topbar .brand::before { content: ">>> "; color: var(--fg-mute); }
-  .topbar .meta { color: var(--fg-dim); }
   .topbar .spacer { flex: 1; }
   .topbar button {
     background: transparent; color: var(--fg);
@@ -123,25 +116,11 @@
   }
 
   /* ---------- section header ---------- */
-  .tier-label {
-    font-family: var(--mono); font-size: .75rem;
-    color: var(--fg-mute); letter-spacing: .15em;
-    text-transform: uppercase;
-    margin-bottom: .7rem;
-    min-height: 1em;
-  }
   h2.slide-title,
   h1.slide-title {
     font-size: clamp(1.8rem, 4vw, 3rem);
-    line-height: 1.15; margin: 0 0 .7rem;
+    line-height: 1.15; margin: 0 0 1.5rem;
     letter-spacing: -.01em; font-weight: 700;
-  }
-  h2.slide-title .num,
-  h1.slide-title .num {
-    color: var(--accent);
-    font-family: var(--mono);
-    font-weight: 600;
-    margin-right: .6em;
   }
 
   /* ---------- placeholder marker ---------- */
@@ -256,23 +235,7 @@
   .tok-ok  { color: var(--green); }
   .tok-prompt { color: var(--fg-mute); user-select: none; }
 
-  /* ---------- reveal narration ---------- */
-  .reveal {
-    margin-top: 1.5rem;
-    color: var(--fg); line-height: 1.65; font-size: 1rem;
-    max-width: 65em;
-    min-height: 2em;
-  }
-
-  /* ---------- impact + fun fact placeholders ---------- */
-  .bottom-row {
-    display: grid; gap: 1rem;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 1.7rem;
-    max-width: 100%;
-  }
-  @media (max-width: 880px) { .bottom-row { grid-template-columns: 1fr; } }
-
+  /* ---------- impact + fun fact (inline + solo) ---------- */
   .impact, .funfact {
     padding: 1rem 1.2rem;
     border: 1px dashed var(--border); border-radius: 8px;
@@ -297,6 +260,34 @@
     content: "todo — ";
     color: var(--fg-mute); opacity: .5;
     font-style: normal;
+  }
+
+  /* solo variant: card is the slide's main content */
+  .impact.solo, .funfact.solo {
+    padding: 2.5rem 3rem;
+    max-width: 55em;
+    border-radius: 14px;
+    background: rgba(255,255,255,.025);
+  }
+  .impact.solo .label, .funfact.solo .label {
+    font-size: .95rem;
+    letter-spacing: .22em;
+    margin-bottom: 1.2rem;
+  }
+  .impact.solo .body, .funfact.solo .body {
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    line-height: 1.6;
+    font-style: normal;
+    color: var(--fg);
+    min-height: 3em;
+  }
+  .impact.solo .body:empty::before, .funfact.solo .body:empty::before {
+    content: "▢ todo";
+    color: var(--fg-mute);
+    opacity: .45;
+    font-style: italic;
+    font-size: .75em;
+    letter-spacing: .05em;
   }
 
   /* ---------- PR links ---------- */
@@ -416,8 +407,6 @@
 <body class="doc">
 
 <nav class="topbar">
-  <span class="brand todo"></span>
-  <span class="meta todo"></span>
   <span class="spacer"></span>
   <button id="mode-doc">Scroll</button>
   <button id="mode-deck" class="active">Deck</button>
@@ -442,7 +431,6 @@
 
 <!-- =========================================================== INDEX -->
 <section class="slide compact" id="index" data-group="index" data-title="contents">
-  <div class="tier-label">contents</div>
   <h2 class="slide-title">Today</h2>
   <div class="toc">
     <a class="tier-card" href="#lazy-imports">
@@ -500,8 +488,7 @@
 
 <!-- =========================================================== 01 LAZY IMPORTS -->
 <section class="slide" id="lazy-imports" data-group="lazy-imports" data-title="01 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">01</span>Lazy imports</h2>
+  <h2 class="slide-title">Lazy imports</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">import</span> torch
@@ -515,8 +502,7 @@
 </section>
 
 <section class="slide" id="lazy-imports-demo" data-group="lazy-imports" data-title="01 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">01</span>Lazy imports</h2>
+  <h2 class="slide-title">Lazy imports</h2>
   <div class="demo">
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -544,13 +530,19 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
   </div>
 </section>
 
-<section class="slide" id="lazy-imports-discuss" data-group="lazy-imports" data-title="01 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">01</span>Lazy imports</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="lazy-imports-funfact" data-group="lazy-imports" data-title="01 · fun fact">
+  <h2 class="slide-title">Lazy imports</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="lazy-imports-impact" data-group="lazy-imports" data-title="01 · impact">
+  <h2 class="slide-title">Lazy imports</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/144852">144852</a>
@@ -564,8 +556,7 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 
 <!-- =========================================================== 02 case +5 -->
 <section class="slide" id="grammar" data-group="grammar" data-title="02 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">02</span>case +5</h2>
+  <h2 class="slide-title">case +5</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">match</span> x:
@@ -576,8 +567,7 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 </section>
 
 <section class="slide" id="grammar-demo" data-group="grammar" data-title="02 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">02</span>case +5</h2>
+  <h2 class="slide-title">case +5</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -601,13 +591,19 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
   </div>
 </section>
 
-<section class="slide" id="grammar-discuss" data-group="grammar" data-title="02 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">02</span>case +5</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="grammar-funfact" data-group="grammar" data-title="02 · fun fact">
+  <h2 class="slide-title">case +5</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="grammar-impact" data-group="grammar" data-title="02 · impact">
+  <h2 class="slide-title">case +5</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/148566">148566</a>
@@ -617,8 +613,7 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 
 <!-- =========================================================== 03 singledispatch -->
 <section class="slide" id="singledispatch" data-group="singledispatch" data-title="03 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">03</span>singledispatch</h2>
+  <h2 class="slide-title">singledispatch</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">from</span> functools <span class="tok-k">import</span> singledispatchmethod
@@ -638,8 +633,7 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 </section>
 
 <section class="slide" id="singledispatch-demo" data-group="singledispatch" data-title="03 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">03</span>singledispatch</h2>
+  <h2 class="slide-title">singledispatch</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -654,13 +648,19 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
   </div>
 </section>
 
-<section class="slide" id="singledispatch-discuss" data-group="singledispatch" data-title="03 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">03</span>singledispatch</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="singledispatch-funfact" data-group="singledispatch" data-title="03 · fun fact">
+  <h2 class="slide-title">singledispatch</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="singledispatch-impact" data-group="singledispatch" data-title="03 · impact">
+  <h2 class="slide-title">singledispatch</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/144615">144615</a>
@@ -670,8 +670,7 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 
 <!-- =========================================================== 04 AttributeError -->
 <section class="slide" id="attrerror" data-group="attrerror" data-title="04 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">04</span>AttributeError</h2>
+  <h2 class="slide-title">AttributeError</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">import</span> collections
@@ -681,8 +680,7 @@ collections.OrderdDict()</pre>
 </section>
 
 <section class="slide" id="attrerror-demo" data-group="attrerror" data-title="04 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">04</span>AttributeError</h2>
+  <h2 class="slide-title">AttributeError</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -711,13 +709,19 @@ collections.OrderdDict()</pre>
   </div>
 </section>
 
-<section class="slide" id="attrerror-discuss" data-group="attrerror" data-title="04 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">04</span>AttributeError</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="attrerror-funfact" data-group="attrerror" data-title="04 · fun fact">
+  <h2 class="slide-title">AttributeError</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="attrerror-impact" data-group="attrerror" data-title="04 · impact">
+  <h2 class="slide-title">AttributeError</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/144299">144299</a>
@@ -728,8 +732,7 @@ collections.OrderdDict()</pre>
 
 <!-- =========================================================== 05 Async debug -->
 <section class="slide" id="asyncio-debug" data-group="asyncio-debug" data-title="05 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">05</span>Async debug</h2>
+  <h2 class="slide-title">Async debug</h2>
   <div class="hook">
     <span class="label todo"></span>
     <p class="q todo"></p>
@@ -739,8 +742,7 @@ collections.OrderdDict()</pre>
 </section>
 
 <section class="slide" id="asyncio-debug-demo" data-group="asyncio-debug" data-title="05 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">05</span>Async debug</h2>
+  <h2 class="slide-title">Async debug</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -764,13 +766,19 @@ PID  TASK              COROUTINE
   </div>
 </section>
 
-<section class="slide" id="asyncio-debug-discuss" data-group="asyncio-debug" data-title="05 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">05</span>Async debug</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="asyncio-debug-funfact" data-group="asyncio-debug" data-title="05 · fun fact">
+  <h2 class="slide-title">Async debug</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="asyncio-debug-impact" data-group="asyncio-debug" data-title="05 · impact">
+  <h2 class="slide-title">Async debug</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143954">143954</a>
@@ -782,8 +790,7 @@ PID  TASK              COROUTINE
 
 <!-- =========================================================== 06 Cells -->
 <section class="slide" id="cells" data-group="cells" data-title="06 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">06</span>Cells</h2>
+  <h2 class="slide-title">Cells</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">def</span> <span class="tok-f">make_a</span>():
@@ -799,8 +806,7 @@ PID  TASK              COROUTINE
 </section>
 
 <section class="slide" id="cells-demo" data-group="cells" data-title="06 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">06</span>Cells</h2>
+  <h2 class="slide-title">Cells</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -821,13 +827,19 @@ PID  TASK              COROUTINE
   </div>
 </section>
 
-<section class="slide" id="cells-discuss" data-group="cells" data-title="06 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">06</span>Cells</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="cells-funfact" data-group="cells" data-title="06 · fun fact">
+  <h2 class="slide-title">Cells</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="cells-impact" data-group="cells" data-title="06 · impact">
+  <h2 class="slide-title">Cells</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143848">143848</a>
@@ -837,8 +849,7 @@ PID  TASK              COROUTINE
 
 <!-- =========================================================== 07 Protocols -->
 <section class="slide" id="protocols" data-group="protocols" data-title="07 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">07</span>Protocols</h2>
+  <h2 class="slide-title">Protocols</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">from</span> typing <span class="tok-k">import</span> Protocol, runtime_checkable
@@ -857,8 +868,7 @@ PID  TASK              COROUTINE
 </section>
 
 <section class="slide" id="protocols-demo" data-group="protocols" data-title="07 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">07</span>Protocols</h2>
+  <h2 class="slide-title">Protocols</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -875,13 +885,19 @@ PID  TASK              COROUTINE
   </div>
 </section>
 
-<section class="slide" id="protocols-discuss" data-group="protocols" data-title="07 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">07</span>Protocols</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="protocols-funfact" data-group="protocols" data-title="07 · fun fact">
+  <h2 class="slide-title">Protocols</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="protocols-impact" data-group="protocols" data-title="07 · impact">
+  <h2 class="slide-title">Protocols</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143806">143806</a>
@@ -891,8 +907,7 @@ PID  TASK              COROUTINE
 
 <!-- =========================================================== 08 Match errors -->
 <section class="slide" id="match-error" data-group="match-error" data-title="08 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">08</span>Match errors</h2>
+  <h2 class="slide-title">Match errors</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">match</span> d:
@@ -904,8 +919,7 @@ PID  TASK              COROUTINE
 </section>
 
 <section class="slide" id="match-error-demo" data-group="match-error" data-title="08 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">08</span>Match errors</h2>
+  <h2 class="slide-title">Match errors</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -933,13 +947,19 @@ PID  TASK              COROUTINE
   </div>
 </section>
 
-<section class="slide" id="match-error-discuss" data-group="match-error" data-title="08 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">08</span>Match errors</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="match-error-funfact" data-group="match-error" data-title="08 · fun fact">
+  <h2 class="slide-title">Match errors</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="match-error-impact" data-group="match-error" data-title="08 · impact">
+  <h2 class="slide-title">Match errors</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/140254">140254</a>
@@ -949,8 +969,7 @@ PID  TASK              COROUTINE
 
 <!-- =========================================================== 09 asyncio REPL -->
 <section class="slide" id="asyncio-repl" data-group="asyncio-repl" data-title="09 · hook">
-  <div class="tier-label">hook</div>
-  <h2 class="slide-title"><span class="num">09</span>asyncio REPL</h2>
+  <h2 class="slide-title">asyncio REPL</h2>
   <div class="hook">
     <span class="label todo"></span>
     <div class="term">python -m asyncio -q</div>
@@ -960,8 +979,7 @@ PID  TASK              COROUTINE
 </section>
 
 <section class="slide" id="asyncio-repl-demo" data-group="asyncio-repl" data-title="09 · demo">
-  <div class="tier-label">demo</div>
-  <h2 class="slide-title"><span class="num">09</span>asyncio REPL</h2>
+  <h2 class="slide-title">asyncio REPL</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -985,13 +1003,19 @@ asyncio REPL 3.14.1 (...)
   </div>
 </section>
 
-<section class="slide" id="asyncio-repl-discuss" data-group="asyncio-repl" data-title="09 · discuss">
-  <div class="tier-label">discuss</div>
-  <h2 class="slide-title"><span class="num">09</span>asyncio REPL</h2>
-  <div class="reveal todo mark"></div>
-  <div class="bottom-row">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
+<section class="slide" id="asyncio-repl-funfact" data-group="asyncio-repl" data-title="09 · fun fact">
+  <h2 class="slide-title">asyncio REPL</h2>
+  <div class="funfact solo">
+    <span class="label">fun fact</span>
+    <div class="body"></div>
+  </div>
+</section>
+
+<section class="slide" id="asyncio-repl-impact" data-group="asyncio-repl" data-title="09 · impact">
+  <h2 class="slide-title">asyncio REPL</h2>
+  <div class="impact solo">
+    <span class="label">impact</span>
+    <div class="body"></div>
   </div>
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143047">143047</a>
@@ -1005,7 +1029,6 @@ asyncio REPL 3.14.1 (...)
 
 <!-- =========================================================== CLOSING -->
 <section class="slide closing" id="closing" data-group="closing" data-title="patterns">
-  <div class="tier-label">closing</div>
   <h2 class="slide-title">Patterns</h2>
   <ul>
     <li><span class="todo mark"></span></li>
@@ -1013,10 +1036,6 @@ asyncio REPL 3.14.1 (...)
     <li><span class="todo mark"></span></li>
   </ul>
   <p class="signoff todo"></p>
-  <div class="bottom-row" style="max-width: 65em">
-    <div class="impact"><span class="label">impact</span><div class="body"></div></div>
-    <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
-  </div>
 </section>
 
 </main>
