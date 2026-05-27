@@ -130,21 +130,18 @@
     margin-bottom: .7rem;
     min-height: 1em;
   }
-  h2.slide-title {
+  h2.slide-title,
+  h1.slide-title {
     font-size: clamp(1.8rem, 4vw, 3rem);
     line-height: 1.15; margin: 0 0 .7rem;
     letter-spacing: -.01em; font-weight: 700;
   }
-  h2.slide-title .num {
+  h2.slide-title .num,
+  h1.slide-title .num {
     color: var(--accent);
     font-family: var(--mono);
     font-weight: 600;
     margin-right: .6em;
-  }
-  .slide-sub {
-    color: var(--fg-dim); font-size: 1.05rem; line-height: 1.6;
-    max-width: 65em; margin: 0 0 1.5rem;
-    min-height: 1em;
   }
 
   /* ---------- placeholder marker ---------- */
@@ -164,12 +161,9 @@
     display: inline-block;
     min-width: 4em;
   }
-  /* hero title doesn't need the mark prefix style — use a bigger box */
-  .hero h1.todo:empty::before  { content: "▢"; font-size: .6em; vertical-align: middle; }
   .hero .tag.todo:empty::before { content: "▢"; }
   .hero .stat .n.todo:empty::before { content: "▢"; }
   .hero .stat .l.todo:empty::before { content: "▢"; font-size: 1em; }
-  h2.slide-title .todo:empty::before { content: "▢"; font-size: .85em; }
 
   /* ---------- hook ---------- */
   .hook {
@@ -400,17 +394,23 @@
   /* ---------- progress dots ---------- */
   .progress {
     position: fixed; right: 1.2rem; top: 50%; transform: translateY(-50%);
-    display: none; flex-direction: column; gap: .5rem;
+    display: none; flex-direction: column; gap: .35rem;
     z-index: 50;
+    max-height: 80vh; overflow: auto;
+    padding: .3rem 0;
   }
   body.deck .progress { display: flex; }
+  .progress::-webkit-scrollbar { width: 0; }
   .progress .dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--border); cursor: pointer;
     transition: all .15s;
+    flex-shrink: 0;
   }
   .progress .dot:hover { background: var(--fg-mute); }
   .progress .dot.active { background: var(--accent); transform: scale(1.5); }
+  .progress .dot.group-start { margin-top: .55rem; }
+  .progress .dot.group-start:first-child { margin-top: 0; }
 </style>
 </head>
 <body class="doc">
@@ -419,8 +419,8 @@
   <span class="brand todo"></span>
   <span class="meta todo"></span>
   <span class="spacer"></span>
-  <button id="mode-doc" class="active">Scroll</button>
-  <button id="mode-deck">Deck</button>
+  <button id="mode-doc">Scroll</button>
+  <button id="mode-deck" class="active">Deck</button>
 </nav>
 
 <div class="progress" id="progress"></div>
@@ -428,9 +428,9 @@
 <main id="app">
 
 <!-- =========================================================== HERO -->
-<section class="slide hero" id="hero" data-title="Intro">
+<section class="slide hero" id="hero" data-group="hero" data-title="intro">
   <span class="tag todo"></span>
-  <h1 class="todo"></h1>
+  <h1 class="slide-title">Python 3.15</h1>
   <p class="sub todo"></p>
   <div class="stats">
     <div class="stat"><span class="n todo"></span><span class="l todo"></span></div>
@@ -441,68 +441,67 @@
 </section>
 
 <!-- =========================================================== INDEX -->
-<section class="slide compact" id="index" data-title="Index">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title todo"></h2>
+<section class="slide compact" id="index" data-group="index" data-title="contents">
+  <div class="tier-label">contents</div>
+  <h2 class="slide-title">Today</h2>
   <div class="toc">
     <a class="tier-card" href="#lazy-imports">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">01</div>
+      <div class="t">Lazy imports</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#grammar">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">02</div>
+      <div class="t">case +5</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#singledispatch">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">03</div>
+      <div class="t">singledispatch</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#attrerror">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">04</div>
+      <div class="t">AttributeError</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#asyncio-debug">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">05</div>
+      <div class="t">Async debug</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#cells">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">06</div>
+      <div class="t">Cells</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#protocols">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">07</div>
+      <div class="t">Protocols</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#match-error">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">08</div>
+      <div class="t">Match errors</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#asyncio-repl">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">09</div>
+      <div class="t">asyncio REPL</div>
       <div class="d todo"></div>
     </a>
     <a class="tier-card" href="#closing">
-      <div class="ix todo"></div>
-      <div class="t todo"></div>
+      <div class="ix">end</div>
+      <div class="t">Patterns</div>
       <div class="d todo"></div>
     </a>
   </div>
 </section>
 
 <!-- =========================================================== 01 LAZY IMPORTS -->
-<section class="slide" id="lazy-imports" data-title="01 · Lazy Imports">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">01</span><span class="todo"></span></h2>
-
+<section class="slide" id="lazy-imports" data-group="lazy-imports" data-title="01 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">01</span>Lazy imports</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">import</span> torch
@@ -513,7 +512,11 @@
     <p class="q todo"></p>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="lazy-imports-demo" data-group="lazy-imports" data-title="01 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">01</span>Lazy imports</h2>
   <div class="demo">
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -527,7 +530,6 @@
     <span class="tok-c"># numpy is materialised here, on first use</span>
     <span class="tok-k">return</span> numpy.zeros(<span class="tok-n">1000</span>)</pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> <span class="tok-k">import</span> sys, my_module
@@ -540,14 +542,16 @@
 array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class="tok-n">0.</span>, ..., <span class="tok-n">0.</span>])</pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="lazy-imports-discuss" data-group="lazy-imports" data-title="01 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">01</span>Lazy imports</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/144852">144852</a>
     <a href="https://github.com/python/cpython/pull/145336">145336</a>
@@ -558,11 +562,10 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
   </div>
 </section>
 
-<!-- =========================================================== 02 GRAMMAR -->
-<section class="slide" id="grammar" data-title="02 · case +5">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">02</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 02 case +5 -->
+<section class="slide" id="grammar" data-group="grammar" data-title="02 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">02</span>case +5</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">match</span> x:
@@ -570,7 +573,11 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
     <span class="tok-k">case</span> +<span class="tok-n">5</span>: <span class="tok-k">print</span>(<span class="tok-s">"pos"</span>)</pre>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="grammar-demo" data-group="grammar" data-title="02 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">02</span>case +5</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -583,7 +590,6 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
          ^
 <span class="tok-err">SyntaxError: invalid syntax</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> <span class="tok-k">match</span> <span class="tok-n">5</span>:
@@ -593,25 +599,26 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 <span class="tok-ok">hit</span></pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="grammar-discuss" data-group="grammar" data-title="02 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">02</span>case +5</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/148566">148566</a>
     <a href="https://github.com/python/cpython/issues/145239">issue 145239</a>
   </div>
 </section>
 
-<!-- =========================================================== 03 SINGLEDISPATCH -->
-<section class="slide" id="singledispatch" data-title="03 · singledispatchmethod">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">03</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 03 singledispatch -->
+<section class="slide" id="singledispatch" data-group="singledispatch" data-title="03 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">03</span>singledispatch</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">from</span> functools <span class="tok-k">import</span> singledispatchmethod
@@ -628,46 +635,54 @@ array([<span class="tok-n">0.</span>, <span class="tok-n">0.</span>, <span class
 <span class="tok-k">print</span>(C.generic(C(), <span class="tok-n">1</span>))    <span class="tok-c"># ?</span></pre>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="singledispatch-demo" data-group="singledispatch" data-title="03 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">03</span>singledispatch</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> C.generic(C(), <span class="tok-n">1</span>)
 <span class="tok-err">'generic'</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> C.generic(C(), <span class="tok-n">1</span>)
 <span class="tok-ok">'special'</span></pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="singledispatch-discuss" data-group="singledispatch" data-title="03 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">03</span>singledispatch</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/144615">144615</a>
     <a href="https://github.com/python/cpython/issues/143535">issue 143535</a>
   </div>
 </section>
 
-<!-- =========================================================== 04 ATTRIBUTEERROR -->
-<section class="slide" id="attrerror" data-title="04 · AttributeError">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">04</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 04 AttributeError -->
+<section class="slide" id="attrerror" data-group="attrerror" data-title="04 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">04</span>AttributeError</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">import</span> collections
 collections.OrderdDict()</pre>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="attrerror-demo" data-group="attrerror" data-title="04 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">04</span>AttributeError</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -680,7 +695,6 @@ collections.OrderdDict()</pre>
 <span class="tok-err">AttributeError</span>: <span class="tok-s">'str'</span> object
   has no attribute <span class="tok-s">'uper'</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> <span class="tok-k">import</span> collections
@@ -695,14 +709,16 @@ collections.OrderdDict()</pre>
   <span class="tok-ok">Did you mean: 'upper'?</span></pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="attrerror-discuss" data-group="attrerror" data-title="04 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">04</span>AttributeError</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/144299">144299</a>
     <a href="https://github.com/python/cpython/pull/145077">145077</a>
@@ -710,18 +726,21 @@ collections.OrderdDict()</pre>
   </div>
 </section>
 
-<!-- =========================================================== 05 ASYNCIO DEBUG -->
-<section class="slide" id="asyncio-debug" data-title="05 · Asyncio remote debug">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">05</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 05 Async debug -->
+<section class="slide" id="asyncio-debug" data-group="asyncio-debug" data-title="05 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">05</span>Async debug</h2>
   <div class="hook">
     <span class="label todo"></span>
     <p class="q todo"></p>
     <p class="q todo"></p>
     <div class="term">python -m asyncio ps &lt;pid&gt;</div>
   </div>
+</section>
 
+<section class="slide" id="asyncio-debug-demo" data-group="asyncio-debug" data-title="05 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">05</span>Async debug</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -733,7 +752,6 @@ collections.OrderdDict()</pre>
 <span class="tok-err">Error: duplicate libpython mappings</span>
 <span class="tok-err">  detected (ctypes-loaded process)</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">$</span> python -m asyncio ps <span class="tok-n">42</span>
@@ -744,14 +762,16 @@ PID  TASK              COROUTINE
 └─   Task-<span class="tok-n">9</span>           queue.consume()</pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="asyncio-debug-discuss" data-group="asyncio-debug" data-title="05 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">05</span>Async debug</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143954">143954</a>
     <a href="https://github.com/python/cpython/pull/144595">144595</a>
@@ -760,11 +780,10 @@ PID  TASK              COROUTINE
   </div>
 </section>
 
-<!-- =========================================================== 06 CELLS -->
-<section class="slide" id="cells" data-title="06 · Cells by identity">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">06</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 06 Cells -->
+<section class="slide" id="cells" data-group="cells" data-title="06 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">06</span>Cells</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">def</span> <span class="tok-f">make_a</span>():
@@ -777,7 +796,11 @@ PID  TASK              COROUTINE
     <p class="q todo"></p>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="cells-demo" data-group="cells" data-title="06 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">06</span>Cells</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -787,7 +810,6 @@ PID  TASK              COROUTINE
 <span class="tok-c"># (because *current* contents</span>
 <span class="tok-c">#  happen to match: both = 10)</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-c"># sketch — identity</span>
@@ -797,25 +819,26 @@ PID  TASK              COROUTINE
 <span class="tok-c">#  different variables / scopes)</span></pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="cells-discuss" data-group="cells" data-title="06 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">06</span>Cells</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143848">143848</a>
     <a href="https://github.com/python/cpython/issues/143831">issue 143831</a>
   </div>
 </section>
 
-<!-- =========================================================== 07 PROTOCOLS -->
-<section class="slide" id="protocols" data-title="07 · Protocol deprecation">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">07</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 07 Protocols -->
+<section class="slide" id="protocols" data-group="protocols" data-title="07 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">07</span>Protocols</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">from</span> typing <span class="tok-k">import</span> Protocol, runtime_checkable
@@ -831,14 +854,17 @@ PID  TASK              COROUTINE
     <p class="q todo"></p>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="protocols-demo" data-group="protocols" data-title="07 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">07</span>Protocols</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> <span class="tok-f">isinstance</span>(obj, Q)
 <span class="tok-ok">True</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> <span class="tok-f">isinstance</span>(obj, Q)
@@ -847,25 +873,26 @@ PID  TASK              COROUTINE
   removed; re-apply <span class="tok-d">@runtime_checkable</span>.</pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="protocols-discuss" data-group="protocols" data-title="07 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">07</span>Protocols</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143806">143806</a>
     <a href="https://github.com/python/cpython/issues/132604">issue 132604</a>
   </div>
 </section>
 
-<!-- =========================================================== 08 MATCH ERROR -->
-<section class="slide" id="match-error" data-title="08 · Match diagnostics">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">08</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 08 Match errors -->
+<section class="slide" id="match-error" data-group="match-error" data-title="08 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">08</span>Match errors</h2>
   <div class="hook">
     <span class="label todo"></span>
 <pre class="snippet"><span class="tok-k">match</span> d:
@@ -874,7 +901,11 @@ PID  TASK              COROUTINE
     <p class="q todo"></p>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="match-error-demo" data-group="match-error" data-title="08 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">08</span>Match errors</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -887,7 +918,6 @@ PID  TASK              COROUTINE
               ^
 <span class="tok-err">SyntaxError: invalid syntax</span></pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">&gt;&gt;&gt;</span> <span class="tok-k">match</span> {<span class="tok-s">"k"</span>: <span class="tok-n">1</span>}:
@@ -901,32 +931,37 @@ PID  TASK              COROUTINE
   in a mapping pattern</pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="match-error-discuss" data-group="match-error" data-title="08 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">08</span>Match errors</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/140254">140254</a>
     <a href="https://github.com/python/cpython/issues/140253">issue 140253</a>
   </div>
 </section>
 
-<!-- =========================================================== 09 ASYNCIO REPL -->
-<section class="slide" id="asyncio-repl" data-title="09 · Asyncio REPL">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title"><span class="num">09</span><span class="todo"></span></h2>
-
+<!-- =========================================================== 09 asyncio REPL -->
+<section class="slide" id="asyncio-repl" data-group="asyncio-repl" data-title="09 · hook">
+  <div class="tier-label">hook</div>
+  <h2 class="slide-title"><span class="num">09</span>asyncio REPL</h2>
   <div class="hook">
     <span class="label todo"></span>
     <div class="term">python -m asyncio -q</div>
     <p class="q todo"></p>
     <p class="q todo"></p>
   </div>
+</section>
 
+<section class="slide" id="asyncio-repl-demo" data-group="asyncio-repl" data-title="09 · demo">
+  <div class="tier-label">demo</div>
+  <h2 class="slide-title"><span class="num">09</span>asyncio REPL</h2>
   <div class="demo">
     <div class="panel before">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
@@ -939,7 +974,6 @@ asyncio REPL 3.14.1 (...)
 <span class="tok-prompt">$</span> python -m asyncio -I
 &gt;&gt;&gt;</pre>
     </div>
-
     <div class="panel after">
       <div class="panel-head"><span class="dot"></span><span class="label todo"></span><span class="ver todo"></span></div>
 <pre><span class="tok-prompt">$</span> python -m asyncio -q
@@ -949,14 +983,16 @@ asyncio REPL 3.14.1 (...)
 &gt;&gt;&gt;</pre>
     </div>
   </div>
+</section>
 
+<section class="slide" id="asyncio-repl-discuss" data-group="asyncio-repl" data-title="09 · discuss">
+  <div class="tier-label">discuss</div>
+  <h2 class="slide-title"><span class="num">09</span>asyncio REPL</h2>
   <div class="reveal todo mark"></div>
-
   <div class="bottom-row">
     <div class="impact"><span class="label">impact</span><div class="body"></div></div>
     <div class="funfact"><span class="label">fun fact</span><div class="body"></div></div>
   </div>
-
   <div class="pr-list">
     <a href="https://github.com/python/cpython/pull/143047">143047</a>
     <a href="https://github.com/python/cpython/pull/143045">143045</a>
@@ -968,9 +1004,9 @@ asyncio REPL 3.14.1 (...)
 </section>
 
 <!-- =========================================================== CLOSING -->
-<section class="slide closing" id="closing" data-title="Closing">
-  <div class="tier-label todo"></div>
-  <h2 class="slide-title todo"></h2>
+<section class="slide closing" id="closing" data-group="closing" data-title="patterns">
+  <div class="tier-label">closing</div>
+  <h2 class="slide-title">Patterns</h2>
   <ul>
     <li><span class="todo mark"></span></li>
     <li><span class="todo mark"></span></li>
@@ -1000,7 +1036,11 @@ asyncio REPL 3.14.1 (...)
 
   slides.forEach((s, i) => {
     const d = document.createElement('div');
-    d.className = 'dot'; d.title = s.dataset.title || s.id;
+    d.className = 'dot';
+    if (i === 0 || slides[i].dataset.group !== slides[i - 1].dataset.group) {
+      d.classList.add('group-start');
+    }
+    d.title = s.dataset.title || s.id;
     d.addEventListener('click', () => go(i));
     progress.appendChild(d);
   });
