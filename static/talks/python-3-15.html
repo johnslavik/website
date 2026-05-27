@@ -1022,7 +1022,7 @@ asyncio REPL 3.14.1 (...)
 </main>
 
 <div class="hint">
-  <span id="counter">1 / 1</span> · <kbd>←</kbd><kbd>→</kbd> nav · <kbd>d</kbd> deck · <kbd>s</kbd> scroll · <kbd>i</kbd> index
+  <span id="counter">1 / 1</span> · <kbd>←</kbd><kbd>→</kbd> slide · <kbd>↑</kbd><kbd>↓</kbd> topic · <kbd>i</kbd> index
 </div>
 
 <script>
@@ -1079,12 +1079,38 @@ asyncio REPL 3.14.1 (...)
   };
   window.addEventListener('hashchange', hashGo);
 
+  const firstOfGroup = i => {
+    const g = slides[i].dataset.group;
+    while (i > 0 && slides[i - 1].dataset.group === g) i--;
+    return i;
+  };
+  const nextGroupStart = i => {
+    const g = slides[i].dataset.group;
+    for (let j = i + 1; j < slides.length; j++) {
+      if (slides[j].dataset.group !== g) return j;
+    }
+    return -1;
+  };
+  const prevGroupStart = i => {
+    const first = firstOfGroup(i);
+    if (first === 0) return -1;
+    return firstOfGroup(first - 1);
+  };
+
   window.addEventListener('keydown', e => {
     if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
       e.preventDefault(); setActive(active + 1);
     } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
       e.preventDefault(); setActive(active - 1);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const n = nextGroupStart(active);
+      if (n >= 0) setActive(n);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const p = prevGroupStart(active);
+      if (p >= 0) setActive(p);
     } else if (e.key === 'd') {
       setMode('deck');
     } else if (e.key === 's') {
