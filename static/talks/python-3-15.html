@@ -986,7 +986,7 @@ asyncio REPL 3.14.1 (...)
 </main>
 
 <div class="hint">
-  <kbd>←</kbd><kbd>→</kbd> nav · <kbd>d</kbd> deck · <kbd>s</kbd> scroll · <kbd>i</kbd> index
+  <span id="counter">1 / 1</span> · <kbd>←</kbd><kbd>→</kbd> nav · <kbd>d</kbd> deck · <kbd>s</kbd> scroll · <kbd>i</kbd> index
 </div>
 
 <script>
@@ -994,6 +994,7 @@ asyncio REPL 3.14.1 (...)
   const slides = [...document.querySelectorAll('section.slide')];
   const ids = slides.map(s => s.id);
   const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
   const btnDoc = document.getElementById('mode-doc');
   const btnDeck = document.getElementById('mode-deck');
 
@@ -1010,6 +1011,7 @@ asyncio REPL 3.14.1 (...)
     slides.forEach((s, j) => s.classList.toggle('active', j === active));
     progress.querySelectorAll('.dot').forEach((d, j) =>
       d.classList.toggle('active', j === active));
+    counter.textContent = (active + 1) + ' / ' + slides.length;
     if (document.body.classList.contains('deck')) {
       window.scrollTo(0, 0);
     } else {
@@ -1024,7 +1026,7 @@ asyncio REPL 3.14.1 (...)
     document.body.classList.toggle('doc',  mode === 'doc');
     btnDoc.classList.toggle('active',  mode === 'doc');
     btnDeck.classList.toggle('active', mode === 'deck');
-    localStorage.setItem('p315mode', mode);
+    localStorage.setItem('p315mode-v2', mode);
     if (mode === 'deck') setActive(active);
   };
   btnDoc.addEventListener('click',  () => setMode('doc'));
@@ -1065,6 +1067,7 @@ asyncio REPL 3.14.1 (...)
           active = i;
           progress.querySelectorAll('.dot').forEach((d, j) =>
             d.classList.toggle('active', j === active));
+          counter.textContent = (active + 1) + ' / ' + slides.length;
           if (history.replaceState) history.replaceState(null, '', '#' + ids[active]);
         }
       }
@@ -1072,7 +1075,7 @@ asyncio REPL 3.14.1 (...)
   }, { threshold: [0.5] });
   slides.forEach(s => io.observe(s));
 
-  const savedMode = localStorage.getItem('p315mode') || 'doc';
+  const savedMode = localStorage.getItem('p315mode-v2') || 'deck';
   setMode(savedMode);
   if (location.hash) hashGo();
 })();
