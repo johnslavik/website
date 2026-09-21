@@ -135,7 +135,7 @@
 		outline: 2px solid #e52a24;
 		outline-offset: 3px;
 	}
-	@media (max-width: 760px) {
+	@media (max-width: 900px) {
 		.section-index a {
 			padding: 14px 12px;
 			font-size: 14px;
@@ -154,7 +154,10 @@
 			writing-mode: horizontal-tb;
 			flex: 1;
 			text-align: center;
-			padding: 12px 8px;
+			padding: 12px 6px;
+			min-height: 46px;
+			white-space: nowrap;
+			letter-spacing: 0;
 			transform: translateY(80px);
 		}
 	}
