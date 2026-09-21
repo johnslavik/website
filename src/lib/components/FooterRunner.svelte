@@ -30,13 +30,12 @@
 			const phase = (elapsed % duration) / duration;
 			const burstDuration = 650 / duration;
 			const entering = phase < burstDuration;
-			const leaving = phase > 1 - burstDuration;
 			const arrival = Math.min(1, phase / burstDuration);
 			const departure = Math.max(0, (phase - 1 + burstDuration) / burstDuration);
 			const scatter = entering ? (1 - arrival) ** 3 : 1 - (1 - departure) ** 3;
 			const assembled = 1 - scatter;
-			const frame = entering ? 0 : leaving ? 39 : Math.floor((elapsed / 675) * 40) % 40;
-			const travel = Math.max(0, Math.min(1, (phase - burstDuration) / (1 - burstDuration * 2)));
+			const frame = Math.floor((elapsed / 675) * 40) % 40;
+			const travel = phase;
 			const x = 24 + travel * Math.max(0, width - 144);
 			context.clearRect(0, 0, width, 96);
 			context.globalAlpha = smooth((assembled - 0.55) / 0.45);
