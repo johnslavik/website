@@ -3219,3 +3219,7 @@ figcaption {
 	background-image: url('/art/squares-white.svg');
 	opacity: 0.3;
 }
+
+.talks-section::after {
+	opacity: 0.13;
+}

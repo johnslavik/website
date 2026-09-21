@@ -25,44 +25,27 @@
 			for (let column = -1; column <= Math.ceil(width / pitch); column++) {
 				const x = column * pitch;
 				const u = x / width;
-				const edge =
-					0.16 + 0.075 * Math.sin(u * Math.PI * 4 + 0.6) + 0.045 * Math.sin(u * Math.PI * 9);
+				const wave = 0.045 * Math.sin(u * Math.PI * 4 + 0.6) + 0.025 * Math.sin(u * Math.PI * 9);
 				const depth = y / height;
-				const assembly = smooth((depth - edge) / (0.88 - edge));
-				if (assembly <= 0) continue;
-				const cluster = 0.8 + 0.2 * Math.sin(u * 19 + depth * 8);
-				if (noise(column, row) > Math.min(1, assembly * cluster * 1.6)) continue;
-				const size = 2.5 + noise(column, row, 1) * 1.5 + 9 * smooth((assembly - 0.5) / 0.45);
+				const assembly = smooth((depth - wave * Math.sin(depth * Math.PI)) / 0.96);
+				if (noise(column, row) > Math.min(1, assembly * 2.4)) continue;
+				const size =
+					3 + (pitch - 2) * smooth((assembly - 0.12 + noise(column, row, 8) * 0.13) / 0.85);
 				bricks.push({
-					x: x + (pitch - size) / 2 + (noise(column, row, 2) - 0.5) * 3,
-					y: y + (pitch - size) / 2 + (noise(column, row, 3) - 0.5) * 3,
+					x: x + (pitch - size) / 2,
+					y: y + (pitch - size) / 2,
 					width: size,
 					height: size,
-					opacity: Math.min(
-						1,
-						smooth(assembly * 2) *
-							(0.4 + noise(column, row, 4) * 0.6 + smooth((assembly - 0.5) / 0.3))
-					)
+					opacity: Math.min(1, assembly * 2.2)
 				});
 			}
 			return {
 				bricks,
+				y,
+				base: smooth((row / rows - 0.5) / 0.46),
 				drift: Math.max(0, 1 - row / (rows * 0.8)) ** 2 * 28
 			};
 		});
-	});
-	const solidEdge = $derived.by(() => {
-		const points: string[] = [];
-		for (let x = -pitch; x <= width + pitch; x += pitch) {
-			const u = x / width;
-			const edge =
-				0.16 + 0.075 * Math.sin(u * Math.PI * 4 + 0.6) + 0.045 * Math.sin(u * Math.PI * 9);
-			const y = height * (edge + (0.88 - edge) * 0.6) + noise(Math.round(x / pitch), 0, 9) * 4;
-			const baseline = reverse ? height - y : y;
-			points.push(`${x},${baseline}`, `${x + pitch},${baseline}`);
-		}
-		const end = reverse ? -1 : height + 1;
-		return `-7,${end} ${points.join(' ')} ${width + pitch},${end}`;
 	});
 	const remnants = $derived.by(() => {
 		const bricks: Brick[] = [];
@@ -73,10 +56,10 @@
 
 			for (let column = 0; column < breadth; column++) {
 				if (noise(column, row, 5) > 0.65) continue;
-				const size = 2.5 + noise(column, row, 1) * 1.5;
+				const size = 3;
 				bricks.push({
-					x: column * pitch + noise(column, row, 2) * 3,
-					y: row * courseHeight + noise(column, row, 3) * 3,
+					x: column * pitch + 2,
+					y: row * courseHeight + 2,
 					width: size,
 					height: size,
 					opacity:
@@ -125,7 +108,16 @@
 
 <div class="section-transition" class:reverse bind:this={element} aria-hidden="true">
 	<svg class="masonry" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
-		<polygon points={solidEdge} />
+		<rect x="0" y={reverse ? -1 : height * 0.98} {width} height={height * 0.02 + 2} />
+		{#each courses as course (course.y)}
+			<rect
+				x="0"
+				y={reverse ? height - course.y - pitch : course.y}
+				{width}
+				height={pitch + 1}
+				opacity={course.base}
+			/>
+		{/each}
 		{#each courses as course, index (index)}
 			<g style={`transform: translateY(calc(var(--gather, 0) * ${-course.drift}px))`}>
 				{#each course.bricks as brick (brick)}<rect
@@ -157,7 +149,7 @@
 		top: 0;
 		height: 100%;
 		fill: var(--to);
-		shape-rendering: crispEdges;
+		shape-rendering: geometricPrecision;
 		overflow: hidden;
 	}
 	.reverse {
