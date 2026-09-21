@@ -3200,3 +3200,7 @@ figcaption {
 		padding-bottom: 80px;
 	}
 }
+
+.hero {
+	isolation: auto;
+}
