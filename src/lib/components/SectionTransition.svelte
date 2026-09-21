@@ -7,6 +7,11 @@
 	let height = $state(240);
 	const tailHeight = $derived(Math.max(420, Math.min(760, width * 0.55)));
 	const pitch = 7;
+	function noise(column: number, row: number, seed = 0) {
+		let n = Math.imul(column + 1024, 374761393) ^ Math.imul(row + seed * 97, 668265263);
+		n = Math.imul(n ^ (n >>> 13), 1274126177);
+		return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+	}
 	const courseHeight = pitch;
 	function smooth(value: number) {
 		const t = Math.max(0, Math.min(1, value));
@@ -25,15 +30,17 @@
 				const depth = y / height;
 				const assembly = smooth((depth - edge) / (0.88 - edge));
 				if (assembly <= 0 || assembly === 1) continue;
-				const noise = ((((column * 73 + row * 151) % 101) + 101) % 101) / 101;
-				if (noise > 0.2 + assembly * 0.8) continue;
-				const size = 1.8 + (pitch - 1.8) * smooth(assembly);
+				const cluster = 0.8 + 0.2 * Math.sin(u * 19 + depth * 8);
+				if (noise(column, row) > Math.min(1, assembly * cluster * 1.6)) continue;
+				const size = 2.5 + noise(column, row, 1) * 1.5 + 9 * smooth((assembly - 0.5) / 0.45);
 				bricks.push({
-					x: x + (pitch - size) / 2,
-					y: y + (pitch - size) / 2,
+					x: x + (pitch - size) / 2 + (noise(column, row, 2) - 0.5) * 3,
+					y: y + (pitch - size) / 2 + (noise(column, row, 3) - 0.5) * 3,
 					width: size,
 					height: size,
-					opacity: smooth(assembly * 2.5)
+					opacity:
+						smooth(assembly * 2) *
+						(0.4 + noise(column, row, 4) * 0.6 + smooth((assembly - 0.5) / 0.3))
 				});
 			}
 			return {
@@ -48,16 +55,20 @@
 		for (let row = 0; row < rows; row++) {
 			const extent = width * 0.22 * (1 - smooth(row / rows));
 			const breadth = Math.ceil(extent / pitch);
-			const size = 2.8 - row / rows;
+
 			for (let column = 0; column < breadth; column++) {
-				if ((column * 73 + row * 151) % 101 > 55) continue;
+				if (noise(column, row, 5) > 0.65) continue;
+				const size = 2.5 + noise(column, row, 1) * 1.5;
 				bricks.push({
-					x: column * pitch,
-					y: row * courseHeight,
+					x: column * pitch + noise(column, row, 2) * 3,
+					y: row * courseHeight + noise(column, row, 3) * 3,
 					width: size,
 					height: size,
 					opacity:
-						0.08 * (1 - smooth(row / rows)) * (1 - smooth((column * pitch) / Math.max(1, extent)))
+						0.3 *
+						(0.4 + noise(column, row, 4) * 0.6) *
+						(1 - smooth(row / rows)) *
+						(1 - smooth((column * pitch) / Math.max(1, extent)))
 				});
 			}
 		}
@@ -130,7 +141,7 @@
 		top: 0;
 		height: 100%;
 		fill: var(--to);
-		background: linear-gradient(to bottom, transparent 62%, #111 88%);
+		background: linear-gradient(to bottom, transparent 88%, #111 98%);
 		overflow: hidden;
 	}
 	.reverse {
@@ -138,16 +149,20 @@
 	}
 	.reverse .masonry {
 		fill: #111;
-		background: linear-gradient(to bottom, #111 12%, transparent 38%);
+		background: linear-gradient(to bottom, #111 2%, transparent 12%);
 	}
 	.masonry-remnants {
 		top: 100%;
 		height: clamp(420px, 55vw, 760px);
-		fill: var(--from);
+		fill: #888;
 		overflow: hidden;
 	}
+	.reverse .masonry-remnants,
+	.reverse .red-remnants {
+		fill: #171717;
+	}
 	.red-remnants {
-		fill: #e52a24;
+		fill: #888;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.masonry g {

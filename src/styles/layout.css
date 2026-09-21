@@ -3204,3 +3204,18 @@ figcaption {
 .hero {
 	isolation: auto;
 }
+
+/* Shared square-dot palette on light and dark surfaces. */
+.composition-grain,
+.talks-section::after {
+	background-image: url('/art/squares-black.svg');
+	opacity: 0.3;
+}
+.composition-dark .composition-grain,
+.activity-heading::after,
+.contact-squares,
+.contact-panel::after,
+.site-footer::after {
+	background-image: url('/art/squares-white.svg');
+	opacity: 0.3;
+}
