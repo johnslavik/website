@@ -3169,3 +3169,12 @@ figcaption {
 		grid-template-columns: 1fr auto;
 	}
 }
+
+.activity-section .composition-grain,
+.activity-squares,
+.activity-heading::after {
+	display: none;
+}
+.activity-item:first-child {
+	background-image: none;
+}
