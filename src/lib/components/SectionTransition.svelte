@@ -29,7 +29,7 @@
 					0.16 + 0.075 * Math.sin(u * Math.PI * 4 + 0.6) + 0.045 * Math.sin(u * Math.PI * 9);
 				const depth = y / height;
 				const assembly = smooth((depth - edge) / (0.88 - edge));
-				if (assembly <= 0 || assembly === 1) continue;
+				if (assembly <= 0) continue;
 				const cluster = 0.8 + 0.2 * Math.sin(u * 19 + depth * 8);
 				if (noise(column, row) > Math.min(1, assembly * cluster * 1.6)) continue;
 				const size = 2.5 + noise(column, row, 1) * 1.5 + 9 * smooth((assembly - 0.5) / 0.45);
@@ -38,9 +38,11 @@
 					y: y + (pitch - size) / 2 + (noise(column, row, 3) - 0.5) * 3,
 					width: size,
 					height: size,
-					opacity:
+					opacity: Math.min(
+						1,
 						smooth(assembly * 2) *
-						(0.4 + noise(column, row, 4) * 0.6 + smooth((assembly - 0.5) / 0.3))
+							(0.4 + noise(column, row, 4) * 0.6 + smooth((assembly - 0.5) / 0.3))
+					)
 				});
 			}
 			return {
@@ -48,6 +50,19 @@
 				drift: Math.max(0, 1 - row / (rows * 0.8)) ** 2 * 28
 			};
 		});
+	});
+	const solidEdge = $derived.by(() => {
+		const points: string[] = [];
+		for (let x = -pitch; x <= width + pitch; x += pitch) {
+			const u = x / width;
+			const edge =
+				0.16 + 0.075 * Math.sin(u * Math.PI * 4 + 0.6) + 0.045 * Math.sin(u * Math.PI * 9);
+			const y = height * (edge + (0.88 - edge) * 0.6) + noise(Math.round(x / pitch), 0, 9) * 4;
+			const baseline = reverse ? height - y : y;
+			points.push(`${x},${baseline}`, `${x + pitch},${baseline}`);
+		}
+		const end = reverse ? -1 : height + 1;
+		return `-7,${end} ${points.join(' ')} ${width + pitch},${end}`;
 	});
 	const remnants = $derived.by(() => {
 		const bricks: Brick[] = [];
@@ -110,6 +125,7 @@
 
 <div class="section-transition" class:reverse bind:this={element} aria-hidden="true">
 	<svg class="masonry" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+		<polygon points={solidEdge} />
 		{#each courses as course, index (index)}
 			<g style={`transform: translateY(calc(var(--gather, 0) * ${-course.drift}px))`}>
 				{#each course.bricks as brick (brick)}<rect
@@ -141,7 +157,7 @@
 		top: 0;
 		height: 100%;
 		fill: var(--to);
-		background: linear-gradient(to bottom, transparent 88%, #111 98%);
+		shape-rendering: crispEdges;
 		overflow: hidden;
 	}
 	.reverse {
@@ -149,7 +165,7 @@
 	}
 	.reverse .masonry {
 		fill: #111;
-		background: linear-gradient(to bottom, #111 2%, transparent 12%);
+		background: none;
 	}
 	.masonry-remnants {
 		top: 100%;
