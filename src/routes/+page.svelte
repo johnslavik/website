@@ -9,7 +9,30 @@
 		let disposed = false;
 		let cleanup: (() => void) | undefined;
 		const sections = shell.querySelectorAll<HTMLElement>('main > section:not(.hero)');
+		const activity = shell.querySelector<HTMLElement>('#activity');
+		let activityRevealed = false;
+		let revealFrame = 0;
 		const motion = matchMedia('(prefers-reduced-motion: reduce)');
+		function paintActivity() {
+			revealFrame = 0;
+			if (!activity || activityRevealed) return;
+			const distance = Math.min(400, innerHeight * 0.45);
+			const progress = motion.matches
+				? 1
+				: Math.max(0, Math.min(1, (innerHeight - activity.getBoundingClientRect().top) / distance));
+			activity.style.setProperty(
+				'--section-reveal',
+				String(progress * progress * (3 - 2 * progress))
+			);
+			activityRevealed = progress === 1;
+		}
+		function updateActivity() {
+			if (!activityRevealed && !revealFrame) revealFrame = requestAnimationFrame(paintActivity);
+		}
+		paintActivity();
+		addEventListener('scroll', updateActivity, { passive: true });
+		addEventListener('resize', updateActivity);
+		motion.addEventListener('change', updateActivity);
 		const reveal = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries)
@@ -21,12 +44,19 @@
 			{ rootMargin: '0px 0px -30px 0px' }
 		);
 		for (const section of sections) {
+			if (section === activity) continue;
 			if (!motion.matches && section.getBoundingClientRect().top > innerHeight)
 				section.classList.add('section-pending');
 			reveal.observe(section);
 		}
-		const focusReveal = (event: FocusEvent) =>
-			(event.target as HTMLElement).closest('section')?.classList.remove('section-pending');
+		const focusReveal = (event: FocusEvent) => {
+			const section = (event.target as HTMLElement).closest('section');
+			section?.classList.remove('section-pending');
+			if (section === activity) {
+				activityRevealed = true;
+				activity?.style.setProperty('--section-reveal', '1');
+			}
+		};
 		shell.addEventListener('focusin', focusReveal);
 		const physics = new IntersectionObserver(
 			(entries) => {
@@ -44,6 +74,10 @@
 
 		return () => {
 			disposed = true;
+			cancelAnimationFrame(revealFrame);
+			removeEventListener('scroll', updateActivity);
+			removeEventListener('resize', updateActivity);
+			motion.removeEventListener('change', updateActivity);
 			reveal.disconnect();
 			physics.disconnect();
 			shell.removeEventListener('focusin', focusReveal);

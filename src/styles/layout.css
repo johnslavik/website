@@ -3286,3 +3286,14 @@ figcaption {
 		translate: 0 0;
 	}
 }
+
+@media (prefers-reduced-motion: no-preference) {
+	main > #activity > :not(.section-composition) {
+		opacity: var(--section-reveal, 1);
+		translate: 0 calc((1 - var(--section-reveal, 1)) * 24px);
+		transition: none;
+	}
+	#activity .composition-grain {
+		opacity: calc(var(--section-reveal, 1) * 0.3);
+	}
+}
