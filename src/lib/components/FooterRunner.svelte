@@ -28,9 +28,16 @@
 			previous = now;
 			const duration = Math.max(4500, ((width + 96) / 100) * 1000);
 			const phase = (elapsed % duration) / duration;
-			const frame = Math.floor((elapsed / 675) * 40) % 40;
-			const assembled = smooth(phase / 0.18) * smooth((1 - phase) / 0.18);
-			const x = -30 + phase * (width - 36);
+			const burstDuration = 650 / duration;
+			const entering = phase < burstDuration;
+			const leaving = phase > 1 - burstDuration;
+			const arrival = Math.min(1, phase / burstDuration);
+			const departure = Math.max(0, (phase - 1 + burstDuration) / burstDuration);
+			const scatter = entering ? (1 - arrival) ** 3 : 1 - (1 - departure) ** 3;
+			const assembled = 1 - scatter;
+			const frame = entering ? 0 : leaving ? 39 : Math.floor((elapsed / 675) * 40) % 40;
+			const travel = Math.max(0, Math.min(1, (phase - burstDuration) / (1 - burstDuration * 2)));
+			const x = 24 + travel * Math.max(0, width - 144);
 			context.clearRect(0, 0, width, 96);
 			context.globalAlpha = smooth((assembled - 0.55) / 0.45);
 			context.drawImage(sprite, frame * 192, 0, 192, 192, x, 0, 96, 96);
@@ -39,11 +46,14 @@
 				context.globalAlpha =
 					(1 - smooth((assembled - 0.55) / 0.45)) *
 					point.alpha *
-					Math.min(1, phase * 24, (1 - phase) * 24);
-				const spread = (1 - assembled) * point.spread;
+					Math.min(1, arrival * 5) *
+					(1 - departure ** 2);
+				const spread = scatter * point.spread;
+				const angle =
+					Math.atan2(point.y - 48, point.x - 48) + Math.sin(point.x * 17 + point.y * 31) * 0.6;
 				context.fillRect(
-					x + point.x + spread * Math.cos(point.x * 1.8),
-					point.y + spread * Math.sin(point.y * 2.1),
+					x + point.x + spread * Math.cos(angle),
+					point.y + spread * Math.sin(angle) * 0.32,
 					2,
 					2
 				);
@@ -69,7 +79,7 @@
 				for (let y = 0; y < 96; y += 3)
 					for (let x = 0; x < 96; x += 3) {
 						const alpha = pixels[(y * 96 + x) * 4 + 3] / 255;
-						if (alpha > 0.2) points.push({ x, y, alpha, spread: 15 + ((x * 17 + y * 31) % 55) });
+						if (alpha > 0.2) points.push({ x, y, alpha, spread: 55 + ((x * 17 + y * 31) % 90) });
 					}
 				return points;
 			});
