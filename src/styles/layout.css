@@ -3254,3 +3254,35 @@ figcaption {
 		opacity: 0;
 	}
 }
+
+.hero {
+	padding-top: 112px;
+}
+@media (max-width: 760px) {
+	.hero {
+		padding-top: 64px;
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	.hero > .intro,
+	.hero > .portrait,
+	.hero > .nav-anchor {
+		animation: hero-arrive 650ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+	}
+	.hero > .portrait {
+		animation-delay: 70ms;
+	}
+	.hero > .nav-anchor {
+		animation-delay: 130ms;
+	}
+}
+@keyframes hero-arrive {
+	from {
+		opacity: 0.15;
+		translate: 0 14px;
+	}
+	to {
+		opacity: 1;
+		translate: 0 0;
+	}
+}
