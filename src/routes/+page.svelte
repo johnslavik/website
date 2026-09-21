@@ -87,10 +87,9 @@
 		display: block;
 		content: '';
 		position: absolute;
-		inset: -64px -40px -64px -80px;
-		background: url('/art/squares-black.svg') repeat center / 640px 280px;
-		opacity: 0.32;
-		mask-image: radial-gradient(ellipse at center, #000 58%, transparent 100%);
+		inset: -72px -72px -72px -72px;
+		background: url('/art/hero-dot-shadow.svg') center / 100% 100% no-repeat;
+		opacity: 0.48;
 		pointer-events: none;
 	}
 	@media (max-width: 760px) {
