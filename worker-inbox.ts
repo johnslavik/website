@@ -8,12 +8,33 @@ export default {
 		const url = new URL(request.url);
 		if (!['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname))
 			return new Response('Not Found', { status: 404 });
+		if (request.headers.get('sec-fetch-site') === 'cross-site')
+			return new Response('Forbidden', { status: 403 });
 		if (url.pathname !== '/') return new Response('Not Found', { status: 404 });
 		if (request.method === 'POST') {
 			if (request.headers.get('origin') !== url.origin)
 				return new Response('Forbidden', { status: 403 });
-			const body = await request.text();
-			if (body.length > 256) return new Response('Invalid request', { status: 400 });
+			if (
+				request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !==
+				'application/x-www-form-urlencoded'
+			)
+				return new Response('Invalid request', { status: 400 });
+			const reader = request.body?.getReader();
+			if (!reader) return new Response('Invalid request', { status: 400 });
+			let size = 0;
+			let body = '';
+			const decoder = new TextDecoder();
+			while (true) {
+				const { value, done } = await reader.read();
+				if (done) break;
+				size += value.byteLength;
+				if (size > 256) {
+					await reader.cancel();
+					return new Response('Request too large', { status: 413 });
+				}
+				body += decoder.decode(value, { stream: true });
+			}
+			body += decoder.decode();
 			const data = new URLSearchParams(body);
 			const id = data.get('id');
 			const status = data.get('status');
@@ -35,6 +56,8 @@ export default {
 					'Content-Type': 'text/html; charset=utf-8',
 					'Cache-Control': 'private, no-store',
 					'X-Frame-Options': 'DENY',
+					'X-Content-Type-Options': 'nosniff',
+					'Referrer-Policy': 'no-referrer',
 					'Content-Security-Policy':
 						"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'"
 				}

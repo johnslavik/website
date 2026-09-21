@@ -36,10 +36,15 @@ export async function digest(value: string) {
 	return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
+const hasControlCharacters = (value: string) =>
+	[...value].some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127);
+
 export function requestKey(request: Request) {
 	if (request.headers.get('origin') !== new URL(request.url).origin)
 		throw new RequestError('Refresh the page and try again.', 403);
-	if (!request.headers.get('content-type')?.startsWith('application/json'))
+	if (
+		request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json'
+	)
 		throw new RequestError('Invalid request.', 400);
 	const key = request.headers.get('idempotency-key');
 	if (!key || !/^[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}$/i.test(key))
@@ -75,8 +80,10 @@ export async function readContact(
 			(input.name !== undefined && typeof input.name !== 'string') ||
 			(requireName && !input.name?.trim()) ||
 			(input.name?.length ?? 0) > 120 ||
+			hasControlCharacters(input.name ?? '') ||
 			typeof input.email !== 'string' ||
-			!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email.trim()) ||
+			hasControlCharacters(input.email) ||
+			!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(input.email.trim()) ||
 			input.email.length > 254 ||
 			typeof input.note !== 'string' ||
 			input.note.length > 1500 ||

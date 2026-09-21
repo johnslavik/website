@@ -94,3 +94,39 @@ test('storage failure never acknowledges a message', async () => {
 	};
 	await assert.rejects(() => saveRequest(db, input, key, 'contact', 'test'));
 });
+
+test('requires exact JSON media type, while allowing charset parameters', () => {
+	const r = request();
+	r.headers.set('content-type', 'application/json-invalid');
+	assert.throws(() => requestKey(r), { status: 400 });
+	r.headers.set('content-type', 'application/json; charset=utf-8');
+	assert.equal(requestKey(r), key);
+});
+for (const change of [
+	{ name: 'Name\r\nInjected' },
+	{ email: 'bad\u0000@example.com' },
+	{ email: '<bad>@example.com' }
+]) {
+	test(`rejects control characters or address delimiters: ${JSON.stringify(change)}`, async () => {
+		await assert.rejects(() => readContact(request({ ...input, ...change })), { status: 400 });
+	});
+}
+test('rate limit exhaustion prevents storing a new message', async () => {
+	let inserted = false;
+	const db = {
+		prepare(sql) {
+			return {
+				bind() {
+					return this;
+				},
+				first: async () => null,
+				run: async () => {
+					if (sql.startsWith('INSERT INTO booking_requests')) inserted = true;
+					return { success: true, meta: { changes: 0 } };
+				}
+			};
+		}
+	};
+	await assert.rejects(() => saveRequest(db, input, key, 'contact', 'test'), { status: 429 });
+	assert.equal(inserted, false);
+});

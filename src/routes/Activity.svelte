@@ -14,7 +14,7 @@
 				if (!entry.isIntersecting) return;
 				observer.disconnect();
 				loading = true;
-				fetch('/api/activity', { signal: controller.signal })
+				fetch('/api/activity?feed=pull-requests-v1', { signal: controller.signal })
 					.then(async (response) => {
 						if (!response.ok) throw new Error('Unavailable');
 						const data = (await response.json()) as { items: typeof items; cached: boolean };

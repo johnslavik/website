@@ -48,6 +48,6 @@ Open http://127.0.0.1:8789 on this computer. This local-only Worker reads the de
 
 Cloudflare routes for `slawecki.dev/*` and `www.slawecki.dev/*` are configured. On 22 September 2026, OVH nameservers were switched to `dee.ns.cloudflare.com` and `micah.ns.cloudflare.com` after removing the old DNSSEC delegation. The root domain now serves the Worker over HTTPS. Fastmail MX, SPF, and all three DKIM records remain in Cloudflare; DKIM records are DNS-only.
 
-Cloudflare DNSSEC signing is enabled, but the registrar DS record is still pending. Add Cloudflare's current key in OVH and verify DNSSEC before considering the migration complete. At the time of migration the DS was `2371 13 2 1467705FD70D0248B604E965F0417DE2321E69A5905E8824AABAEA1866CFCBD8`; verify it against the Cloudflare dashboard before using it.
+Cloudflare DNSSEC signing is enabled. On 22 September 2026, OVH accepted the Cloudflare key registration (key tag 2371, algorithm 13, flag 257). The matching DS is published and Cloudflare’s validating resolver returns authenticated (AD) answers for the domain. At the time of migration the DS was `2371 13 2 1467705FD70D0248B604E965F0417DE2321E69A5905E8824AABAEA1866CFCBD8`; verify it against the Cloudflare dashboard before using it.
 
 Future route deployments need Cloudflare zone-read and Workers-route-write permissions. The current CLI OAuth session lacks those scopes, so the routes were configured in the dashboard. Refresh the CLI login if a future deploy reports a routing-permission error.

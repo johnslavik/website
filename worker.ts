@@ -7,7 +7,16 @@ import {
 export default {
 	fetch(request: Request, env: NotificationEnvironment, context: ExecutionContext) {
 		if (new URL(request.url).pathname.startsWith('/admin'))
-			return new Response('Not Found', { status: 404 });
+			return new Response('Not Found', {
+				status: 404,
+				headers: {
+					'Content-Type': 'text/plain; charset=utf-8',
+					'X-Content-Type-Options': 'nosniff',
+					'X-Frame-Options': 'DENY',
+					'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'",
+					'Cache-Control': 'no-store'
+				}
+			});
 		return app.fetch(request, env, context);
 	},
 	scheduled(_event: ScheduledController, env: NotificationEnvironment, context: ExecutionContext) {

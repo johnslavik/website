@@ -1,32 +1,32 @@
 [
 	{
-		"repo": "python/peps",
-		"title": "PEP 846: Add `Discussions-To` link to the DPO thread (#5131)",
-		"url": "https://github.com/python/peps/commit/8766f78fee7b2bd08bce0537fcb2c9b103b10d71",
-		"date": "2026-09-18T19:51:22.000Z"
-	},
-	{
-		"repo": "python/peps",
-		"title": "PEP 846: Clarify docstring placement and parser wording (#5130)",
-		"url": "https://github.com/python/peps/commit/90088deac27aed7a19aa4afcf7e5278581050a66",
-		"date": "2026-09-18T12:46:41.000-07:00"
-	},
-	{
-		"repo": "python/peps",
-		"title": "PEP 846: Docstrings for type aliases (#5116)",
-		"url": "https://github.com/python/peps/commit/2ebac423fc632d5c1cae984cbf00a7a72a33032c",
-		"date": "2026-09-16T08:06:46.000-07:00"
-	},
-	{
 		"repo": "apache/magpie-site",
-		"title": "Remove the redundant documentation overview page",
-		"url": "https://github.com/apache/magpie-site/commit/2b3a438f5eb8e1d62319ac37fdce926d857cd24b",
-		"date": "2026-09-16T02:00:47.000+02:00"
+		"title": "Redesign the website",
+		"url": "https://github.com/apache/magpie-site/pull/196",
+		"date": "2026-09-20T17:11:15Z"
 	},
 	{
-		"repo": "apache/magpie",
-		"title": "fix(agent-isolation): read the main checkout's settings in a linked worktree (#1229)",
-		"url": "https://github.com/apache/magpie/commit/32e82cd0f40665c3b82064de7703f6b326fdb2dc",
-		"date": "2026-09-15T12:17:20.000+02:00"
+		"repo": "python/cpython",
+		"title": "gh-154561: Check module dict after trying to load submodule",
+		"url": "https://github.com/python/cpython/pull/154742",
+		"date": "2026-09-18T21:46:19Z"
+	},
+	{
+		"repo": "python/peps",
+		"title": "PEP 846: Add `Discussions-To` link to the DPO thread",
+		"url": "https://github.com/python/peps/pull/5131",
+		"date": "2026-09-18T21:09:51Z"
+	},
+	{
+		"repo": "python/cpython",
+		"title": "gh-157625: Specialize syntax errors for unparenthesized yield expressions",
+		"url": "https://github.com/python/cpython/pull/157767",
+		"date": "2026-09-18T20:37:29Z"
+	},
+	{
+		"repo": "python/peps",
+		"title": "PEP 846: Clarify docstring placement and parser wording",
+		"url": "https://github.com/python/peps/pull/5130",
+		"date": "2026-09-18T19:46:41Z"
 	}
 ]
