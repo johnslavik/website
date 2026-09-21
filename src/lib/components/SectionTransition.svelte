@@ -6,8 +6,8 @@
 	let width = $state(1200);
 	let height = $state(240);
 	const tailHeight = $derived(Math.max(420, Math.min(760, width * 0.55)));
-	const pitch = 8;
-	const courseHeight = 14;
+	const pitch = 7;
+	const courseHeight = pitch;
 	function smooth(value: number) {
 		const t = Math.max(0, Math.min(1, value));
 		return t * t * (3 - 2 * t);
@@ -25,14 +25,14 @@
 				const depth = y / height;
 				const assembly = smooth((depth - edge) / (0.88 - edge));
 				if (assembly <= 0 || assembly === 1) continue;
-				const gapX = 6.25 * (1 - assembly);
-				const gapY = 9 * (1 - assembly);
-				const overlap = assembly === 1 ? 0.25 : 0;
+				const noise = ((((column * 73 + row * 151) % 101) + 101) % 101) / 101;
+				if (noise > 0.2 + assembly * 0.8) continue;
+				const size = 1.8 + (pitch - 1.8) * smooth(assembly);
 				bricks.push({
-					x: x + gapX / 2,
-					y: y + gapY / 2,
-					width: pitch - gapX + overlap,
-					height: courseHeight - gapY + overlap,
+					x: x + (pitch - size) / 2,
+					y: y + (pitch - size) / 2,
+					width: size,
+					height: size,
 					opacity: smooth(assembly * 2.5)
 				});
 			}
@@ -48,13 +48,14 @@
 		for (let row = 0; row < rows; row++) {
 			const extent = width * 0.22 * (1 - smooth(row / rows));
 			const breadth = Math.ceil(extent / pitch);
-			const gap = 1.75 + (row / rows) * 4;
+			const size = 2.8 - row / rows;
 			for (let column = 0; column < breadth; column++) {
+				if ((column * 73 + row * 151) % 101 > 55) continue;
 				bricks.push({
 					x: column * pitch,
 					y: row * courseHeight,
-					width: pitch - gap,
-					height: courseHeight - gap,
+					width: size,
+					height: size,
 					opacity:
 						0.08 * (1 - smooth(row / rows)) * (1 - smooth((column * pitch) / Math.max(1, extent)))
 				});
