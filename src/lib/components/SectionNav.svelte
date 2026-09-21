@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	let anchor: HTMLDivElement;
+	let anchor: HTMLSpanElement;
 	let docked = $state(false);
 	let active = $state('');
 	const links = [
@@ -33,7 +33,8 @@
 	});
 </script>
 
-<div class="nav-anchor" bind:this={anchor}>
+<div class="nav-anchor">
+	<span class="dock-trigger" bind:this={anchor} aria-hidden="true"></span>
 	<nav class="section-index" aria-label="Main navigation">
 		{#each links as link (link.id)}<a href={'#' + link.id}>{link.title}</a>{/each}
 	</nav>
@@ -45,16 +46,24 @@
 	aria-hidden={!docked}
 	inert={!docked}
 >
-	{#each links as link, i (link.id)}<a
+	{#each links as link (link.id)}<a
 			href={'#' + link.id}
 			class:active={active === link.id}
-			aria-current={active === link.id ? 'location' : undefined}
-			style:--order={i}>{link.title}</a
+			aria-current={active === link.id ? 'location' : undefined}>{link.title}</a
 		>{/each}
 </nav>
 
 <style>
+	.dock-trigger {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 1px;
+		pointer-events: none;
+	}
 	.nav-anchor {
+		position: relative;
 		grid-column: 1 / -1;
 		width: 100%;
 	}
@@ -102,10 +111,9 @@
 		transform: translateX(90px);
 		opacity: 0;
 		transition:
-			transform 420ms cubic-bezier(0.76, 0, 0.24, 1),
+			transform 160ms cubic-bezier(0.76, 0, 0.24, 1),
 			opacity 180ms,
 			background 160ms;
-		transition-delay: calc(var(--order) * 65ms);
 	}
 	.section-dock.docked {
 		pointer-events: auto;
