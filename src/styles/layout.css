@@ -3170,11 +3170,6 @@ figcaption {
 	}
 }
 
-.activity-section .composition-grain,
-.activity-squares,
-.activity-heading::after {
+.activity-squares {
 	display: none;
-}
-.activity-item:first-child {
-	background-image: none;
 }
