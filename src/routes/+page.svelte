@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import SectionTransition from '$lib/components/SectionTransition.svelte';
 	import FooterRunner from '$lib/components/FooterRunner.svelte';
+	import SectionNav from '$lib/components/SectionNav.svelte';
 	let shell: HTMLDivElement;
 	onMount(() => {
 		let disposed = false;
@@ -44,11 +45,7 @@
 					/>
 				</div>
 			</figure>
-			<nav class="hero-index" aria-label="Main navigation">
-				<a href="#activity">Open Source</a>
-				<a href="#talks">Talks</a>
-				<a href="#contact">Get in touch</a>
-			</nav>
+			<SectionNav />
 		</section>
 		<SectionTransition />
 		<Activity />
@@ -87,9 +84,9 @@
 		display: block;
 		content: '';
 		position: absolute;
-		inset: -72px -72px -72px -72px;
+		inset: -88px -72px -88px -100px;
 		background: url('/art/hero-dot-shadow.svg') center / 100% 100% no-repeat;
-		opacity: 0.48;
+		opacity: 0.9;
 		pointer-events: none;
 	}
 	@media (max-width: 760px) {

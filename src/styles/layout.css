@@ -3173,3 +3173,30 @@ figcaption {
 .activity-squares {
 	display: none;
 }
+
+.surname {
+	color: #171717;
+}
+.activity-item .activity-repo,
+.activity-item:hover .activity-repo,
+.activity-item:focus-visible .activity-repo {
+	color: #aaa;
+}
+.talks-section {
+	isolation: isolate;
+}
+.talks-section::after {
+	content: '';
+	position: absolute;
+	inset: 120px -32px 50px;
+	background: url('/art/squares-black.svg') center / 640px 280px repeat;
+	opacity: 0.13;
+	pointer-events: none;
+	z-index: -1;
+	mask-image: linear-gradient(transparent, black 15%, black 85%, transparent);
+}
+@media (max-width: 760px) {
+	.site-footer {
+		padding-bottom: 80px;
+	}
+}
