@@ -5,6 +5,7 @@
 	type Brick = { x: number; y: number; width: number; height: number; opacity: number };
 	let width = $state(1200);
 	let height = $state(240);
+	let active = $state(false);
 	const tailHeight = $derived(Math.max(420, Math.min(760, width * 0.55)));
 	const pitch = 7;
 	function noise(column: number, row: number, seed = 0) {
@@ -18,6 +19,7 @@
 		return t * t * (3 - 2 * t);
 	}
 	const courses = $derived.by(() => {
+		if (!active) return [];
 		const rows = Math.ceil(height / courseHeight);
 		return Array.from({ length: rows }, (_, row) => {
 			const y = row * courseHeight;
@@ -48,6 +50,7 @@
 		});
 	});
 	const remnants = $derived.by(() => {
+		if (!active) return [];
 		const bricks: Brick[] = [];
 		const rows = Math.ceil(tailHeight / courseHeight);
 		for (let row = 0; row < rows; row++) {
@@ -72,7 +75,35 @@
 		}
 		return bricks;
 	});
+	function paths(dots: Brick[], flip = false) {
+		const groups: Record<string, string[]> = {};
+		for (const dot of dots) {
+			const opacity = Math.round(dot.opacity * 24) / 24;
+			if (!opacity) continue;
+			const y = flip ? height - dot.y - dot.height : dot.y;
+			const path = `M${dot.x.toFixed(2)} ${y.toFixed(2)}h${dot.width.toFixed(2)}v${dot.height.toFixed(2)}h-${dot.width.toFixed(2)}Z`;
+			const group = groups[opacity] ?? [];
+			group.push(path);
+			groups[opacity] = group;
+		}
+		return Object.entries(groups).map(([opacity, commands]) => ({
+			opacity: Number(opacity),
+			d: commands.join('')
+		}));
+	}
 	onMount(() => {
+		let nearby = false;
+		const visibility = new IntersectionObserver(
+			([entry]) => {
+				nearby = entry.isIntersecting;
+				if (nearby) {
+					active = true;
+					update();
+				}
+			},
+			{ rootMargin: '600px' }
+		);
+		visibility.observe(element);
 		const observer = new ResizeObserver(([entry]) => {
 			width = entry.contentRect.width;
 			height = entry.contentRect.height;
@@ -90,7 +121,7 @@
 			element.style.setProperty('--gather', `${reduced.matches ? 0 : Math.max(0, -progress)}`);
 		}
 		function update() {
-			if (!frame) frame = requestAnimationFrame(paint);
+			if (nearby && !frame) frame = requestAnimationFrame(paint);
 		}
 		addEventListener('scroll', update, { passive: true });
 		addEventListener('resize', update);
@@ -98,6 +129,7 @@
 		paint();
 		return () => {
 			observer.disconnect();
+			visibility.disconnect();
 			removeEventListener('scroll', update);
 			removeEventListener('resize', update);
 			reduced.removeEventListener('change', update);
@@ -120,17 +152,14 @@
 		{/each}
 		{#each courses as course, index (index)}
 			<g style={`transform: translateY(calc(var(--gather, 0) * ${-course.drift}px))`}>
-				{#each course.bricks as brick (brick)}<rect
-						{...brick}
-						y={reverse ? height - brick.y - brick.height : brick.y}
-					/>{/each}
+				{#each paths(course.bricks, reverse) as path (path.opacity)}<path {...path} />{/each}
 			</g>
 		{/each}
 	</svg>
 	<svg class="masonry-remnants" viewBox={`0 0 ${width} ${tailHeight}`} preserveAspectRatio="none">
-		{#each remnants as brick (brick)}<rect {...brick} />{/each}
+		{#each paths(remnants) as path (path.opacity)}<path {...path} />{/each}
 		<g transform={`translate(${width} 0) scale(-1 1)`} class="red-remnants">
-			{#each remnants as brick (brick)}<rect {...brick} />{/each}
+			{#each paths(remnants) as path (path.opacity)}<path {...path} />{/each}
 		</g>
 	</svg>
 </div>

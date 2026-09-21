@@ -8,11 +8,45 @@
 	onMount(() => {
 		let disposed = false;
 		let cleanup: (() => void) | undefined;
-		import('$lib/puzzle-physics').then(({ startPuzzlePhysics }) => {
-			if (!disposed) cleanup = startPuzzlePhysics(shell);
-		});
+		const sections = shell.querySelectorAll<HTMLElement>('main > section:not(.hero)');
+		const motion = matchMedia('(prefers-reduced-motion: reduce)');
+		const reveal = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries)
+					if (entry.isIntersecting) {
+						entry.target.classList.remove('section-pending');
+						reveal.unobserve(entry.target);
+					}
+			},
+			{ rootMargin: '0px 0px -30px 0px' }
+		);
+		for (const section of sections) {
+			if (!motion.matches && section.getBoundingClientRect().top > innerHeight)
+				section.classList.add('section-pending');
+			reveal.observe(section);
+		}
+		const focusReveal = (event: FocusEvent) =>
+			(event.target as HTMLElement).closest('section')?.classList.remove('section-pending');
+		shell.addEventListener('focusin', focusReveal);
+		const physics = new IntersectionObserver(
+			(entries) => {
+				if (!entries.some((entry) => entry.isIntersecting)) return;
+				physics.disconnect();
+				import('$lib/puzzle-physics')
+					.then(({ startPuzzlePhysics }) => {
+						if (!disposed) cleanup = startPuzzlePhysics(shell);
+					})
+					.catch(() => {});
+			},
+			{ rootMargin: '300px' }
+		);
+		for (const section of sections) physics.observe(section);
+
 		return () => {
 			disposed = true;
+			reveal.disconnect();
+			physics.disconnect();
+			shell.removeEventListener('focusin', focusReveal);
 			cleanup?.();
 		};
 	});
@@ -26,7 +60,13 @@
 </script>
 
 <svelte:head>
-	<link rel="preload" as="image" href={Hero.img.src} imagesrcset={preloadSrcSet} />
+	<link
+		rel="preload"
+		as="image"
+		href={Hero.img.src}
+		imagesrcset={preloadSrcSet}
+		imagesizes="(max-width: 760px) 100vw, 45vw"
+	/>
 	<meta name="theme-color" content="#ffffff" />
 </svelte:head>
 
@@ -79,6 +119,11 @@
 			flex-wrap: wrap;
 			gap: 12px;
 		}
+	}
+	.photo-frame {
+		box-shadow:
+			0 18px 26px -18px #17171755,
+			0 35px 50px -30px #17171726;
 	}
 	.portrait::before {
 		display: block;

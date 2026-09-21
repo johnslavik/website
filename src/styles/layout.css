@@ -3223,3 +3223,25 @@ figcaption {
 .talks-section::after {
 	opacity: 0.13;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+	main > section:not(.hero) > :not(.section-composition) {
+		transition:
+			opacity 550ms ease,
+			translate 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+	}
+	main > section.section-pending > :not(.section-composition) {
+		opacity: 0;
+		translate: 0 24px;
+	}
+}
+
+.business-signoff {
+	z-index: 3;
+}
+.business-signoff .runner-track {
+	overflow: visible;
+	contain: none;
+	background: transparent;
+	z-index: 4;
+}

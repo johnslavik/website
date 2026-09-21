@@ -37,7 +37,7 @@
 			const frame = Math.floor((elapsed / 675) * 40) % 40;
 			const travel = phase;
 			const x = 24 + travel * Math.max(0, width - 144);
-			context.clearRect(0, 0, width, 96);
+			context.clearRect(-160, -80, width + 320, 256);
 			context.globalAlpha = smooth((assembled - 0.55) / 0.45);
 			context.drawImage(sprite, frame * 192, 0, 192, 192, x, 0, 96, 96);
 			context.fillStyle = '#e52a24';
@@ -84,17 +84,18 @@
 			});
 			update();
 		};
-		sprite.src = '/art/nawczoraj-runner.png';
+
 		const observer = new IntersectionObserver(([entry]) => {
 			nearby = entry.isIntersecting;
+			if (nearby && !sprite.getAttribute('src')) sprite.src = '/art/nawczoraj-runner.png';
 			update();
 		});
 		const resize = new ResizeObserver(([entry]) => {
 			width = entry.contentRect.width;
 			const ratio = Math.min(devicePixelRatio, 2);
-			canvas.width = width * ratio;
-			canvas.height = 96 * ratio;
-			context.setTransform(ratio, 0, 0, ratio, 0, 0);
+			canvas.width = (width + 320) * ratio;
+			canvas.height = 256 * ratio;
+			context.setTransform(ratio, 0, 0, ratio, 160 * ratio, 80 * ratio);
 			update();
 		});
 		observer.observe(track);
@@ -123,8 +124,13 @@
 <style>
 	canvas {
 		display: block;
-		width: 100%;
-		height: 96px;
+		position: absolute;
+		left: -160px;
+		top: -80px;
+		width: calc(100% + 320px);
+		max-width: none;
+		height: 256px;
+		pointer-events: none;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.runner-track {

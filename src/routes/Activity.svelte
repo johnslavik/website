@@ -4,32 +4,50 @@
 	import InlineMarkdown from '$lib/components/InlineMarkdown.svelte';
 	import snapshot from '$lib/github-snapshot.json';
 	let items = $state<{ repo: string; title: string; url: string; date: string }[]>(snapshot);
-	let loading = $state(true);
+	let section: HTMLElement;
+	let loading = $state(false);
 	let cached = $state(false);
 	onMount(() => {
 		const controller = new AbortController();
-		fetch('/api/activity', { signal: controller.signal })
-			.then(async (response) => {
-				if (!response.ok) throw new Error('Unavailable');
-				const data = (await response.json()) as { items: typeof items; cached: boolean };
-				items = data.items;
-				cached = data.cached;
-			})
-			.catch(() => {})
-			.finally(() => {
-				loading = false;
-			});
-		return () => controller.abort();
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting) return;
+				observer.disconnect();
+				loading = true;
+				fetch('/api/activity', { signal: controller.signal })
+					.then(async (response) => {
+						if (!response.ok) throw new Error('Unavailable');
+						const data = (await response.json()) as { items: typeof items; cached: boolean };
+						items = data.items;
+						cached = data.cached;
+					})
+					.catch(() => {})
+					.finally(() => {
+						loading = false;
+					});
+			},
+			{ rootMargin: '450px' }
+		);
+		observer.observe(section);
+		return () => {
+			observer.disconnect();
+			controller.abort();
+		};
 	});
 </script>
 
-<section id="activity" class="activity-section" aria-labelledby="activity-title">
+<section
+	bind:this={section}
+	id="activity"
+	class="activity-section"
+	aria-labelledby="activity-title"
+>
 	<div class="activity-art"><span aria-hidden="true">GIT<br />HUB</span><i></i><b></b></div>
 	<span class="square-field activity-squares" aria-hidden="true"></span>
 	<div class="activity-heading">
 		<h2 id="activity-title">Open Source</h2>
 		<a target="_blank" rel="noopener noreferrer" href="https://github.com/johnslavik"
-			>View profile</a
+			>View GitHub profile</a
 		>
 	</div>
 	<p class="activity-intro">These days, I mostly contribute to CPython and Apache Magpie.</p>
