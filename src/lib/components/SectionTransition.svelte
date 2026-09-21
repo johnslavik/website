@@ -44,7 +44,6 @@
 			return {
 				bricks,
 				y,
-				base: smooth((row / rows - 0.5) / 0.46),
 				drift: Math.max(0, 1 - row / (rows * 0.8)) ** 2 * 28
 			};
 		});
@@ -121,6 +120,10 @@
 				-1,
 				Math.min(1, (innerHeight / 2 - rect.top - rect.height / 2) / innerHeight)
 			);
+			element.style.setProperty(
+				'--dot-reveal',
+				`${reduced.matches ? 1 : smooth((innerHeight - rect.top) / (innerHeight * 0.55))}`
+			);
 			element.style.setProperty('--gather', `${reduced.matches ? 0 : Math.max(0, -progress)}`);
 		}
 		function update() {
@@ -144,15 +147,6 @@
 <div class="section-transition" class:reverse bind:this={element} aria-hidden="true">
 	<svg class="masonry" viewBox={`0 0 ${width || 1} ${height || 1}`} preserveAspectRatio="none">
 		<rect x="0" y={reverse ? -1 : height * 0.98} {width} height={height * 0.02 + 2} />
-		{#each courses as course (course.y)}
-			<rect
-				x="0"
-				y={reverse ? height - course.y - pitch : course.y}
-				{width}
-				height={pitch + 1}
-				opacity={course.base}
-			/>
-		{/each}
 		{#each courses as course, index (index)}
 			<g style={`transform: translateY(calc(var(--gather, 0) * ${-course.drift}px))`}>
 				{#each paths(course.bricks, reverse) as path (path.opacity)}<path {...path} />{/each}
@@ -186,19 +180,24 @@
 		height: 100%;
 		fill: var(--to);
 		shape-rendering: geometricPrecision;
+		background: linear-gradient(to bottom, transparent 42%, #11111166 60%, #111111e8 80%, #111 94%);
 		overflow: hidden;
+	}
+	.masonry g {
+		opacity: calc(0.55 + var(--dot-reveal, 1) * 0.45);
 	}
 	.reverse {
 		background: #fff;
 	}
 	.reverse .masonry {
 		fill: #111;
-		background: none;
+		background: linear-gradient(to top, transparent 42%, #11111166 60%, #111111e8 80%, #111 94%);
 	}
 	.masonry-remnants {
 		top: 100%;
 		height: clamp(420px, 55vw, 760px);
 		fill: #888;
+		opacity: var(--dot-reveal, 1);
 		overflow: hidden;
 	}
 	.reverse .masonry-remnants,

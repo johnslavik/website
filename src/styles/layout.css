@@ -3245,3 +3245,12 @@ figcaption {
 	background: transparent;
 	z-index: 4;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+	.composition-grain {
+		transition: opacity 1000ms ease;
+	}
+	.section-pending .composition-grain {
+		opacity: 0;
+	}
+}
