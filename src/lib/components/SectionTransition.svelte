@@ -3,8 +3,8 @@
 	let { reverse = false }: { reverse?: boolean } = $props();
 	let element: HTMLDivElement;
 	type Brick = { x: number; y: number; width: number; height: number; opacity: number };
-	let width = $state(1200);
-	let height = $state(240);
+	let width = $state(0);
+	let height = $state(0);
 	let active = $state(false);
 	const tailHeight = $derived(Math.max(420, Math.min(760, width * 0.55)));
 	const pitch = 7;
@@ -19,7 +19,7 @@
 		return t * t * (3 - 2 * t);
 	}
 	const courses = $derived.by(() => {
-		if (!active) return [];
+		if (!active || !width || !height) return [];
 		const rows = Math.ceil(height / courseHeight);
 		return Array.from({ length: rows }, (_, row) => {
 			const y = row * courseHeight;
@@ -50,7 +50,7 @@
 		});
 	});
 	const remnants = $derived.by(() => {
-		if (!active) return [];
+		if (!active || !width || !height) return [];
 		const bricks: Brick[] = [];
 		const rows = Math.ceil(tailHeight / courseHeight);
 		for (let row = 0; row < rows; row++) {
@@ -92,6 +92,9 @@
 		}));
 	}
 	onMount(() => {
+		const bounds = element.getBoundingClientRect();
+		width = bounds.width;
+		height = bounds.height;
 		let nearby = false;
 		const visibility = new IntersectionObserver(
 			([entry]) => {
@@ -139,7 +142,7 @@
 </script>
 
 <div class="section-transition" class:reverse bind:this={element} aria-hidden="true">
-	<svg class="masonry" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+	<svg class="masonry" viewBox={`0 0 ${width || 1} ${height || 1}`} preserveAspectRatio="none">
 		<rect x="0" y={reverse ? -1 : height * 0.98} {width} height={height * 0.02 + 2} />
 		{#each courses as course (course.y)}
 			<rect
@@ -156,7 +159,11 @@
 			</g>
 		{/each}
 	</svg>
-	<svg class="masonry-remnants" viewBox={`0 0 ${width} ${tailHeight}`} preserveAspectRatio="none">
+	<svg
+		class="masonry-remnants"
+		viewBox={`0 0 ${width || 1} ${tailHeight}`}
+		preserveAspectRatio="none"
+	>
 		{#each paths(remnants) as path (path.opacity)}<path {...path} />{/each}
 		<g transform={`translate(${width} 0) scale(-1 1)`} class="red-remnants">
 			{#each paths(remnants) as path (path.opacity)}<path {...path} />{/each}
