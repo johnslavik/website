@@ -12,7 +12,8 @@ export const GET: RequestHandler = async ({ platform }) => {
 	const cache = typeof caches !== 'undefined' ? await caches.open('github-pull-requests-v1') : null;
 	const key = new Request('https://slawecki.dev/api/activity?feed=pull-requests-v1');
 	const cached = await cache?.match(key);
-	if (cached) return cached;
+	// Cache API responses have immutable headers; the security hook adds headers.
+	if (cached) return new Response(cached.body, cached);
 	try {
 		const response = await fetch(
 			'https://api.github.com/search/issues?q=author%3Ajohnslavik+type%3Apr&sort=updated&order=desc&per_page=5',

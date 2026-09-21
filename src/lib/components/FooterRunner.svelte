@@ -5,7 +5,7 @@
 	onMount(() => {
 		const context = canvas.getContext('2d');
 		if (!context) return;
-		const motion = matchMedia('(prefers-reduced-motion: reduce)');
+		const motion = matchMedia('(prefers-reduced-motion: reduce), (max-width: 767px)');
 		const sprite = new Image();
 		let frames: { x: number; y: number; spread: number; alpha: number }[][] = [];
 		let width = 0,
@@ -61,6 +61,8 @@
 			request = requestAnimationFrame(draw);
 		};
 		const update = () => {
+			if (nearby && !motion.matches && !sprite.getAttribute('src'))
+				sprite.src = '/art/nawczoraj-runner.png';
 			if (!request) request = requestAnimationFrame(draw);
 		};
 		sprite.onload = () => {
@@ -87,7 +89,6 @@
 
 		const observer = new IntersectionObserver(([entry]) => {
 			nearby = entry.isIntersecting;
-			if (nearby && !sprite.getAttribute('src')) sprite.src = '/art/nawczoraj-runner.png';
 			update();
 		});
 		const resize = new ResizeObserver(([entry]) => {
@@ -132,7 +133,7 @@
 		height: 256px;
 		pointer-events: none;
 	}
-	@media (prefers-reduced-motion: reduce) {
+	@media (prefers-reduced-motion: reduce), (max-width: 767px) {
 		.runner-track {
 			display: none;
 		}
