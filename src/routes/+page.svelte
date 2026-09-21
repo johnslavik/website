@@ -84,12 +84,13 @@
 		}
 	}
 	.portrait::before {
+		display: block;
 		content: '';
 		position: absolute;
-		inset: -48px -32px -52px -64px;
+		inset: -64px -40px -64px -80px;
 		background: url('/art/squares-black.svg') repeat center / 640px 280px;
-		opacity: 0.22;
-		mask-image: radial-gradient(ellipse at center, #000 42%, transparent 75%);
+		opacity: 0.32;
+		mask-image: radial-gradient(ellipse at center, #000 58%, transparent 100%);
 		pointer-events: none;
 	}
 	@media (max-width: 760px) {
