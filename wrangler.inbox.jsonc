@@ -1,0 +1,22 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"account_id": "5a5873d6f34537bc1d8e6818edc4a6f1",
+	"name": "slawecki-inbox-local",
+	"main": "worker-inbox.ts",
+	"compatibility_date": "2026-09-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": false,
+	"preview_urls": false,
+	"vars": {
+		"APP_ENV": "production"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "slawecki-booking",
+			"database_id": "ea8e5bf9-1078-4017-a7a1-0eec5c547959",
+			"migrations_dir": "db/migrations",
+			"remote": true
+		}
+	]
+}

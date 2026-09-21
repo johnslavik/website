@@ -1,38 +1,5 @@
-<script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { prefersReducedMotion } from 'svelte/motion';
-</script>
-
-<h1 class="text-sm">Connect with me</h1>
-
-<nav class="flex justify-evenly gap-2">
-	<a
-		target="_blank"
-		rel="noopener noreferrer"
-		aria-label="LinkedIn"
-		href="https://linkedin.com/in/johnslavik"
-		><Icon
-			width="46"
-			icon={prefersReducedMotion.current ? 'mdi:linkedin' : 'line-md:linkedin'}
-			class="transition-all duration-500 hover:scale-105"
-		/></a
+<nav class="social-links" aria-label="Connect with me">
+	<a href="https://github.com/johnslavik" target="_blank" rel="noopener noreferrer">GitHub</a>
+	<a href="https://linkedin.com/in/johnslavik" target="_blank" rel="noopener noreferrer">LinkedIn</a
 	>
-	<a
-		target="_blank"
-		rel="noopener noreferrer"
-		aria-label="GitHub"
-		href="https://github.com/johnslavik"
-		><Icon
-			width="46"
-			icon={prefersReducedMotion.current ? 'mdi:github' : 'line-md:github'}
-			class="transition-all duration-500 hover:scale-105"
-		/></a
-	>
-	<!-- <a target="_blank" rel="noopener noreferrer" aria-label="Mastodon" href="https://fosstodon.org/@bswck"
-		><Icon
-			width="64"
-			icon={prefersReducedMotion.current ? "mdi:mastodon" : "line-md:mastodon"}
-			class="transition-all duration-500 hover:scale-105"
-		/></a
-	> -->
 </nav>

@@ -1,0 +1,47 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"account_id": "5a5873d6f34537bc1d8e6818edc4a6f1",
+	"name": "slawecki-website",
+	"main": "worker.ts",
+	"compatibility_date": "2026-09-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"preview_urls": false,
+	"assets": {
+		"directory": ".svelte-kit/cloudflare",
+		"binding": "ASSETS"
+	},
+	"vars": {
+		"APP_ENV": "production"
+	},
+	"triggers": {
+		"crons": ["*/5 * * * *"]
+	},
+	"send_email": [
+		{
+			"name": "BOOKING_EMAIL",
+			"destination_address": "bartosz@nawczoraj.com"
+		}
+	],
+	"observability": {
+		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "slawecki-booking",
+			"database_id": "ea8e5bf9-1078-4017-a7a1-0eec5c547959",
+			"migrations_dir": "db/migrations"
+		}
+	],
+	"routes": [
+		{
+			"pattern": "slawecki.dev/*",
+			"zone_name": "slawecki.dev"
+		},
+		{
+			"pattern": "www.slawecki.dev/*",
+			"zone_name": "slawecki.dev"
+		}
+	]
+}

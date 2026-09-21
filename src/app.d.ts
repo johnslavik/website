@@ -1,13 +1,11 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+/// <reference types="@cloudflare/workers-types" />
+import type { NotificationEnvironment } from '$lib/server/booking-notifications';
 declare global {
 	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
+		interface Platform {
+			env: NotificationEnvironment & { DB: D1Database; BOOKING_RATE_LIMIT_SALT: string };
+			context: ExecutionContext;
+		}
 	}
 }
-
 export {};

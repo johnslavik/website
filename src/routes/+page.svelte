@@ -1,56 +1,100 @@
 <script lang="ts">
-	import Hero from '$lib/assets/hero.jpg?enhanced';
-	import '../app.css';
+	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
+	import SectionTransition from '$lib/components/SectionTransition.svelte';
+	import FooterRunner from '$lib/components/FooterRunner.svelte';
+	let shell: HTMLDivElement;
+	onMount(() => {
+		let disposed = false;
+		let cleanup: (() => void) | undefined;
+		import('$lib/puzzle-physics').then(({ startPuzzlePhysics }) => {
+			if (!disposed) cleanup = startPuzzlePhysics(shell);
+		});
+		return () => {
+			disposed = true;
+			cleanup?.();
+		};
+	});
+	import Hero from '$lib/assets/bartosz-pycon.jpg?enhanced';
 	import About from './About.svelte';
 	import Socials from './Socials.svelte';
+	import Contact from './Contact.svelte';
+	import Activity from './Activity.svelte';
+	import Talks from './Talks.svelte';
 	const preloadSrcSet = Hero.sources.avif ?? Hero.sources.webp ?? Hero.sources.jpeg;
 </script>
 
 <svelte:head>
 	<link rel="preload" as="image" href={Hero.img.src} imagesrcset={preloadSrcSet} />
+	<meta name="theme-color" content="#ffffff" />
 </svelte:head>
 
-<!-- You can tell this took me a lot of time to get right ;) -->
-
-<main class="relative grid min-h-60 w-screen not-sm:grid-rows-[auto_1fr] sm:grid-cols-[auto_1fr]">
-	<About />
-	<div class="relative flex min-h-60 w-full min-w-70 overflow-hidden sm:justify-end">
-		<article
-			id="socials"
-			class="fixed prose prose-sm py-8 ml-8 not-sm:absolute not-sm:right-8 not-sm:rounded-b-[30%] not-sm:mix-blend-difference not-sm:prose-invert sm:bottom-0 sm:left-8 sm:rounded-t-[30%]"
-		>
-			<Socials />
-		</article>
-		<enhanced:img
-			id="hero"
-			class="h-[70vh] object-cover transition-all duration-300 sm:size-full"
-			src={Hero}
-			alt=""
-		/>
-		<i class="absolute right-2 bottom-2 prose prose-sm text-xs bg-blend-lighten text-shadow-2xs">
-			Image courtesy of <a
-				href="https://alicjabokina.com/"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="attribution">Alicja Bokina</a
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="site-shell" bind:this={shell}>
+	<main id="main">
+		<section class="hero" aria-labelledby="intro-title">
+			<About />
+			<figure class="portrait">
+				<div class="photo-frame">
+					<enhanced:img
+						src={Hero}
+						alt="Bartosz presenting Python code at PyCon PL."
+						sizes="(max-width: 760px) 100vw, 45vw"
+						fetchpriority="high"
+					/>
+				</div>
+			</figure>
+			<nav class="hero-index" aria-label="Main navigation">
+				<a href="#activity">Open Source</a>
+				<a href="#talks">Talks</a>
+				<a href="#contact">Get in touch</a>
+			</nav>
+		</section>
+		<SectionTransition />
+		<Activity />
+		<SectionTransition reverse />
+		<Talks />
+		<SectionTransition />
+		<Contact />
+	</main>
+	<FooterRunner />
+	<footer class="site-footer">
+		<Socials />
+		<nav class="footer-pages" aria-label="Site links">
+			<a href={resolve('/privacy')} target="_blank" rel="noopener noreferrer">Privacy policy</a><a
+				class="back-top"
+				href="#main">Back to top</a
 			>
-		</i>
-	</div>
-</main>
+		</nav>
+	</footer>
+</div>
 
 <style>
-	@reference 'tailwindcss';
-	@plugin '@tailwindcss/typography';
-
-	@media (max-height: 36rem) and (min-width: 40rem) {
-		#socials {
-			@apply absolute -top-4 right-2 justify-self-end mix-blend-difference prose-invert;
+	.footer-pages {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 24px;
+		font-size: 13px;
+	}
+	@media (max-width: 560px) {
+		.footer-pages {
+			flex-wrap: wrap;
+			gap: 12px;
 		}
 	}
-
-	main {
-		height: 100vh;
-		height: 100svh;
-		height: 100dvh;
+	.portrait::before {
+		content: '';
+		position: absolute;
+		inset: -48px -32px -52px -64px;
+		background: url('/art/squares-black.svg') repeat center / 640px 280px;
+		opacity: 0.22;
+		mask-image: radial-gradient(ellipse at center, #000 42%, transparent 75%);
+		pointer-events: none;
+	}
+	@media (max-width: 760px) {
+		.portrait::before {
+			inset: -28px -20px -32px;
+		}
 	}
 </style>
