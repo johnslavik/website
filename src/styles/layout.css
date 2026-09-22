@@ -1337,7 +1337,7 @@ figcaption {
 [data-puzzle] {
 	pointer-events: auto;
 	cursor: grab;
-	touch-action: none;
+	touch-action: pan-y pinch-zoom;
 }
 [data-puzzle]:focus-visible {
 	outline: 2px solid #e52a24;
@@ -1381,7 +1381,7 @@ figcaption {
 	top: 0;
 	pointer-events: auto;
 	cursor: grab;
-	touch-action: none;
+	touch-action: pan-y pinch-zoom;
 	transform-origin: center;
 	box-sizing: border-box;
 }
@@ -3393,5 +3393,15 @@ figcaption {
 		display: inline-flex;
 		align-items: center;
 		min-height: 44px;
+	}
+}
+
+@media (max-width: 900px), (hover: none), (pointer: coarse) {
+	[data-puzzle],
+	.puzzle-loose,
+	.composition-piece {
+		pointer-events: none;
+		touch-action: auto;
+		cursor: default;
 	}
 }

@@ -140,7 +140,7 @@ export function startPuzzlePhysics(root: HTMLElement) {
 		return piece;
 	}
 	function grab(event: PointerEvent, piece: Piece) {
-		if (event.button !== 0 || drag) return;
+		if (event.pointerType !== 'mouse' || event.button !== 0 || drag) return;
 		event.preventDefault();
 		event.stopPropagation();
 		Body.setStatic(piece.body, true);
@@ -227,7 +227,7 @@ export function startPuzzlePhysics(root: HTMLElement) {
 		);
 		const down = (event: Event) => {
 			const e = event as PointerEvent;
-			if (e.button === 0 && !drag) grab(e, clone(source));
+			if (e.pointerType === 'mouse' && e.button === 0 && !drag) grab(e, clone(source));
 		};
 		const key = (event: Event) => {
 			const e = event as KeyboardEvent;
@@ -244,6 +244,8 @@ export function startPuzzlePhysics(root: HTMLElement) {
 		cleanup.push(() => {
 			source.removeEventListener('pointerdown', down);
 			source.removeEventListener('keydown', key);
+			for (const attribute of ['data-puzzle', 'tabindex', 'role', 'aria-label'])
+				source.removeAttribute(attribute);
 		});
 	});
 	const escape = (event: KeyboardEvent) => {

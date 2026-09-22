@@ -58,19 +58,37 @@
 			}
 		};
 		shell.addEventListener('focusin', focusReveal);
+		const pointer = matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)');
+		let physicsNearby = false;
+		let physicsLoading = false;
+		function updatePhysics() {
+			if (!pointer.matches) {
+				cleanup?.();
+				cleanup = undefined;
+				return;
+			}
+			if (!physicsNearby || cleanup || physicsLoading) return;
+			physicsLoading = true;
+			import('$lib/puzzle-physics')
+				.then(({ startPuzzlePhysics }) => {
+					if (!disposed && pointer.matches) cleanup = startPuzzlePhysics(shell);
+				})
+				.catch(() => {})
+				.finally(() => {
+					physicsLoading = false;
+				});
+		}
 		const physics = new IntersectionObserver(
 			(entries) => {
 				if (!entries.some((entry) => entry.isIntersecting)) return;
+				physicsNearby = true;
 				physics.disconnect();
-				import('$lib/puzzle-physics')
-					.then(({ startPuzzlePhysics }) => {
-						if (!disposed) cleanup = startPuzzlePhysics(shell);
-					})
-					.catch(() => {});
+				updatePhysics();
 			},
 			{ rootMargin: '300px' }
 		);
 		for (const section of sections) physics.observe(section);
+		pointer.addEventListener('change', updatePhysics);
 
 		return () => {
 			disposed = true;
@@ -80,6 +98,7 @@
 			motion.removeEventListener('change', updateActivity);
 			reveal.disconnect();
 			physics.disconnect();
+			pointer.removeEventListener('change', updatePhysics);
 			shell.removeEventListener('focusin', focusReveal);
 			cleanup?.();
 		};
