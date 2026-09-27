@@ -7,6 +7,7 @@
 	class:composition-dark={dark}
 	class:composition-reverse={variant === 'b'}
 >
+	<div class="technical-rail" aria-hidden="true"><i></i><span></span><b></b></div>
 	<span class="composition-grain" aria-hidden="true"></span>
 	<span class="composition-piece composition-step"></span>
 	<span class="composition-piece composition-frame"></span>

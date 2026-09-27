@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Component } from 'svelte';
+	import TechFrame from '$lib/components/TechFrame.svelte';
 	import SectionComposition from '$lib/components/SectionComposition.svelte';
 	let section: HTMLElement;
 	let Form = $state<Component>();
@@ -45,14 +46,17 @@
 	<div class="contact-heading">
 		<h2 id="contact-title">Get in touch</h2>
 		<p>Send me a message or suggest a time to talk.</p>
-		<img
-			class="contact-portrait"
-			src="https://avatars.githubusercontent.com/u/64036239?s=640&amp;v=4"
-			alt="Bartosz Sławecki"
-			width="640"
-			height="640"
-			loading="lazy"
-		/>
+		<div class="contact-photo">
+			<img
+				class="contact-portrait"
+				src="https://avatars.githubusercontent.com/u/64036239?s=640&amp;v=4"
+				alt="Bartosz Sławecki"
+				width="640"
+				height="640"
+				loading="lazy"
+			/>
+			<TechFrame compact />
+		</div>
 	</div>
 	{#if Form}<Form />{:else}
 		<div class="contact-panel deferred-contact" aria-busy={!failed}>

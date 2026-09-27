@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import SectionTransition from '$lib/components/SectionTransition.svelte';
+	import TechFrame from '$lib/components/TechFrame.svelte';
 	import FooterRunner from '$lib/components/FooterRunner.svelte';
 	import SectionNav from '$lib/components/SectionNav.svelte';
 	let shell: HTMLDivElement;
@@ -137,6 +138,7 @@
 						fetchpriority="high"
 					/>
 				</div>
+				<TechFrame />
 			</figure>
 			<SectionNav />
 		</section>
