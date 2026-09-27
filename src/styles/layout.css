@@ -3575,7 +3575,7 @@ main > section.section-pending > .dot-surface.dark {
 }
 
 /* Carry the fine surface texture through the entire transition, including its solid tail. */
-.section-transition > .dot-surface {
+.site-shell .section-transition > .dot-surface {
 	z-index: 1;
 	color: #fff;
 	opacity: 0.075;

@@ -148,6 +148,11 @@ test('texture covers transitions and light surfaces remain perceptible', async (
 			expect(await layer.evaluate((e) => getComputedStyle(e).display)).not.toBe('none');
 		}
 	}
+	for (const layer of await page.locator('.section-transition > .dot-surface').all()) {
+		expect(await layer.evaluate((e) => Number(getComputedStyle(e).zIndex))).toBeGreaterThanOrEqual(
+			0
+		);
+	}
 	for (const selector of ['.hero > .dot-surface', '#talks > .dot-surface']) {
 		expect(
 			await page.locator(selector).evaluate((e) => Number(getComputedStyle(e).opacity))
