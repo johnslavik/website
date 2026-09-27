@@ -220,10 +220,12 @@ test('every dock block remains unobscured above every section', async ({ page })
 	}
 });
 
-test('direct section links retain their destination on initial load', async ({ page }) => {
-	await page.goto('/#talks');
-	await expect.poll(() => page.evaluate(() => location.hash)).toBe('#talks');
-	await expect
-		.poll(() => page.locator('#talks').evaluate((e) => Math.abs(e.getBoundingClientRect().top)))
-		.toBeLessThan(150);
-});
+for (const id of ['activity', 'talks', 'contact']) {
+	test(`direct ${id} link retains its destination on initial load`, async ({ page }) => {
+		await page.goto(`/#${id}`);
+		await expect.poll(() => page.evaluate(() => location.hash)).toBe(`#${id}`);
+		await expect
+			.poll(() => page.locator(`#${id}`).evaluate((e) => Math.abs(e.getBoundingClientRect().top)))
+			.toBeLessThan(150);
+	});
+}

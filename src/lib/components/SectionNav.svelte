@@ -46,7 +46,11 @@
 		addEventListener('resize', schedule);
 		const observer = new ResizeObserver(schedule);
 		for (const section of sections) observer.observe(section);
-		schedule();
+		const initialTarget = sections.find((section) => `#${section.id}` === location.hash);
+		frame = requestAnimationFrame(() => {
+			initialTarget?.scrollIntoView({ behavior: 'instant', block: 'start' });
+			update();
+		});
 		return () => {
 			cancelAnimationFrame(frame);
 			observer.disconnect();
