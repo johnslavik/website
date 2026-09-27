@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { DOT, dotNoise as noise } from '$lib/dot-pattern';
 	let { reverse = false }: { reverse?: boolean } = $props();
 	let element: HTMLDivElement;
 	type Brick = { x: number; y: number; width: number; height: number; opacity: number };
@@ -7,12 +8,7 @@
 	let height = $state(0);
 	let active = $state(false);
 	const tailHeight = $derived(Math.max(420, Math.min(760, width * 0.55)));
-	const pitch = 7;
-	function noise(column: number, row: number, seed = 0) {
-		let n = Math.imul(column + 1024, 374761393) ^ Math.imul(row + seed * 97, 668265263);
-		n = Math.imul(n ^ (n >>> 13), 1274126177);
-		return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
-	}
+	const pitch = DOT.pitch;
 	const courseHeight = pitch;
 	function smooth(value: number) {
 		const t = Math.max(0, Math.min(1, value));
@@ -32,7 +28,8 @@
 				const assembly = smooth((depth - wave * Math.sin(depth * Math.PI)) / 0.96);
 				if (noise(column, row) > Math.min(1, assembly * 2.4)) continue;
 				const size =
-					3 + (pitch - 2) * smooth((assembly - 0.12 + noise(column, row, 8) * 0.13) / 0.85);
+					DOT.size +
+					(pitch + 1 - DOT.size) * smooth((assembly - 0.12 + noise(column, row, 8) * 0.13) / 0.85);
 				bricks.push({
 					x: x + (pitch - size) / 2,
 					y: y + (pitch - size) / 2,
@@ -58,10 +55,10 @@
 
 			for (let column = 0; column < breadth; column++) {
 				if (noise(column, row, 5) > 0.65) continue;
-				const size = 3;
+				const size = DOT.size;
 				bricks.push({
-					x: column * pitch + 2,
-					y: row * courseHeight + 2,
+					x: column * pitch + (pitch - size) / 2,
+					y: row * courseHeight + (courseHeight - size) / 2,
 					width: size,
 					height: size,
 					opacity:

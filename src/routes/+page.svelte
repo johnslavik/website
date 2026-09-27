@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import SectionTransition from '$lib/components/SectionTransition.svelte';
+	import DotShadow from '$lib/components/DotShadow.svelte';
 	import TechFrame from '$lib/components/TechFrame.svelte';
 	import FooterRunner from '$lib/components/FooterRunner.svelte';
 	import SectionNav from '$lib/components/SectionNav.svelte';
@@ -130,6 +131,7 @@
 		<section class="hero" aria-labelledby="intro-title">
 			<About />
 			<figure class="portrait">
+				<DotShadow />
 				<div class="photo-frame">
 					<enhanced:img
 						src={Hero}
@@ -179,19 +181,5 @@
 		box-shadow:
 			0 18px 26px -18px #17171755,
 			0 35px 50px -30px #17171726;
-	}
-	.portrait::before {
-		display: block;
-		content: '';
-		position: absolute;
-		inset: -88px -72px -88px -100px;
-		background: url('/art/hero-dot-shadow.svg') center / 100% 100% no-repeat;
-		opacity: 0.9;
-		pointer-events: none;
-	}
-	@media (max-width: 760px) {
-		.portrait::before {
-			inset: -28px -20px -32px;
-		}
 	}
 </style>

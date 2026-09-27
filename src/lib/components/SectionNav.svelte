@@ -80,9 +80,6 @@
 		color: #171717;
 		transition: background 160ms;
 	}
-	.section-index a:first-child {
-		padding-left: 0;
-	}
 	.section-index a:hover {
 		background: #f2f2f2;
 	}
