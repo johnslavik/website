@@ -62,25 +62,50 @@ for (const width of [320, 390, 768, 1280, 1920]) {
 		}
 	});
 }
-test('navigation docks immediately after its anchor passes above the viewport', async ({
+test('navigation stays hidden through the hero, emerges in Open Source, and hides on return', async ({
 	page
 }) => {
-	await page.setViewportSize({ width: 1280, height: 800 });
-	await page.goto('/');
-	await expect(page.locator('.section-dock')).toHaveAttribute('inert', '');
-	await page.locator('.nav-anchor').evaluate((e) =>
-		window.scrollTo({
-			top: e.getBoundingClientRect().top + window.scrollY + 2,
-			behavior: 'instant'
-		})
-	);
-	await expect(page.locator('.section-dock')).not.toHaveAttribute('inert', '');
-	await page
-		.locator('.section-dock')
-		.getByRole('link', { name: 'Back to top', exact: true })
-		.click();
-	await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(2);
-	await expect(page.locator('.section-dock')).toHaveAttribute('inert', '');
+	for (const width of [390, 1280]) {
+		await page.setViewportSize({ width, height: 800 });
+		await page.goto('/');
+		const dock = page.locator('.section-dock');
+		for (const progress of [0, 0.5, 0.9]) {
+			await page.locator('.hero').evaluate(
+				(e, progress) =>
+					window.scrollTo({
+						top: e.getBoundingClientRect().top + scrollY + e.clientHeight * progress,
+						behavior: 'instant'
+					}),
+				progress
+			);
+			await expect(dock).toHaveAttribute('inert', '');
+			await expect(dock).toHaveAttribute('aria-hidden', 'true');
+			await expect
+				.poll(() =>
+					dock
+						.locator('a')
+						.first()
+						.evaluate((e) => getComputedStyle(e).opacity)
+				)
+				.toBe('0');
+		}
+		await page
+			.locator('#activity')
+			.evaluate((e) => e.scrollIntoView({ behavior: 'instant', block: 'start' }));
+		await expect(dock).not.toHaveAttribute('inert', '');
+		await expect
+			.poll(() =>
+				dock
+					.locator('a')
+					.first()
+					.evaluate((e) => getComputedStyle(e).opacity)
+			)
+			.toBe('1');
+		await dock.getByRole('link', { name: 'Back to top', exact: true }).click();
+		await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(2);
+		await expect.poll(() => page.evaluate(() => location.pathname + location.hash)).toBe('/');
+		await expect(dock).toHaveAttribute('inert', '');
+	}
 });
 test('content, links and all talk covers preserve the agreed intent', async ({ page }) => {
 	await page.goto('/');
@@ -176,7 +201,7 @@ test('entering sections synchronizes the URL without adding history entries', as
 			behavior: 'instant'
 		})
 	);
-	await expect(page.locator('.section-dock')).not.toHaveAttribute('inert', '');
+	await expect(page.locator('.section-dock')).toHaveAttribute('inert', '');
 	for (const id of ['activity', 'talks', 'contact']) {
 		await page
 			.locator(`#${id}`)

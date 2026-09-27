@@ -1,5 +1,5 @@
 export function sectionNavigation(
-	anchorTop: number,
+	heroBottom: number,
 	sections: { id: string; top: number }[],
 	viewportHeight: number
 ) {
@@ -7,6 +7,6 @@ export function sectionNavigation(
 		sections.filter((section) => section.top <= viewportHeight * 0.35).at(-1)?.id ?? 'main';
 	return {
 		active,
-		docked: anchorTop <= 0 || (sections[0]?.top ?? Infinity) < viewportHeight * 0.85
+		docked: heroBottom <= 0 && active !== 'main'
 	};
 }

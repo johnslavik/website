@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import { sectionNavigation } from '$lib/section-navigation';
 	// Fixed navigation must live outside section isolation/animation stacking contexts.
 	function portal(node: HTMLElement) {
@@ -28,15 +29,16 @@
 		function update() {
 			frame = 0;
 			const next = sectionNavigation(
-				anchor.getBoundingClientRect().top,
+				anchor.closest('.hero')!.getBoundingClientRect().bottom,
 				sections.map((section) => ({ id: section.id, top: section.getBoundingClientRect().top })),
 				innerHeight
 			);
 			docked = next.docked;
 			active = next.active;
-			if (location.hash !== `#${active}`) {
-				// eslint-disable-next-line svelte/no-navigation-without-resolve -- Fragment-only update preserves the current route and query.
-				replaceState(`#${active}`, page.state);
+			const hash = active === 'main' ? '' : `#${active}`;
+			if (location.hash !== hash) {
+				// eslint-disable-next-line svelte/no-navigation-without-resolve -- Update only the fragment, preserving the current route and query.
+				replaceState(`${location.pathname}${location.search}${hash}`, page.state);
 			}
 		}
 		function schedule() {
@@ -74,7 +76,7 @@
 	aria-hidden={!docked}
 	inert={!docked}
 >
-	<a class="back-to-top" href="#main" aria-label="Back to top">↑</a>
+	<a class="back-to-top" href={resolve('/')} aria-label="Back to top">↑</a>
 	{#each links as link (link.id)}<a
 			href={'#' + link.id}
 			class:active={active === link.id}
@@ -137,8 +139,8 @@
 		transform: translateX(90px);
 		opacity: 0;
 		transition:
-			transform 160ms cubic-bezier(0.76, 0, 0.24, 1),
-			opacity 180ms,
+			transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 420ms ease-out,
 			background 160ms;
 	}
 	.section-dock a.back-to-top {

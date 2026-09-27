@@ -163,7 +163,7 @@
 		<nav class="footer-pages" aria-label="Site links">
 			<a href={resolve('/privacy')} target="_blank" rel="noopener noreferrer">Privacy policy</a><a
 				class="back-top"
-				href="#main">Back to top</a
+				href={resolve('/')}>Back to top</a
 			>
 		</nav>
 	</footer>
