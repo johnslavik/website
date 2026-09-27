@@ -35,9 +35,8 @@
 			docked = next.docked;
 			active = next.active;
 			if (location.hash !== `#${active}`) {
-				const url = new URL(location.href);
-				url.hash = active;
-				replaceState(url, page.state);
+				// eslint-disable-next-line svelte/no-navigation-without-resolve -- Fragment-only update preserves the current route and query.
+				replaceState(`#${active}`, page.state);
 			}
 		}
 		function schedule() {
