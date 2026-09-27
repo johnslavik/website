@@ -42,3 +42,40 @@ export function dotFieldImage(color: string) {
 	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${DOT_FIELD.width}" height="${DOT_FIELD.height}"><g fill="${color}">${paths.join('')}</g></svg>`;
 	return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
+
+// Crop only at cell boundaries, in the gap after a complete square.
+export function dotViewport(width: number, height: number) {
+	const snap = (value: number) =>
+		Number.isFinite(value) ? Math.max(0, Math.floor(value / DOT.pitch) * DOT.pitch) : 0;
+	return { width: snap(width), height: snap(height) };
+}
+
+export function dotExclusion(x: number, y: number, width: number, height: number) {
+	const left = Math.floor(x / DOT.pitch) * DOT.pitch;
+	const top = Math.floor(y / DOT.pitch) * DOT.pitch;
+	return {
+		x: left,
+		y: top,
+		width: Math.ceil((x + width) / DOT.pitch) * DOT.pitch - left,
+		height: Math.ceil((y + height) / DOT.pitch) * DOT.pitch - top
+	};
+}
+
+export function wholeSquareInBounds(
+	x: number,
+	y: number,
+	size: number,
+	width: number,
+	height: number,
+	upwardTravel = 0
+) {
+	return (
+		[x, y, size, width, height, upwardTravel].every(Number.isFinite) &&
+		size > 0 &&
+		upwardTravel >= 0 &&
+		x >= 0 &&
+		y - upwardTravel >= 0 &&
+		x + size <= width &&
+		y + size <= height
+	);
+}

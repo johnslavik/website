@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "node --experimental-strip-types scripts/generate-dot-fields.mjs && vite build",
+		"build": "node --experimental-strip-types --test tests/dot-pattern.test.mjs && node --experimental-strip-types scripts/generate-dot-fields.mjs && vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -16,12 +16,15 @@
 		"db:migrate:local": "wrangler d1 migrations apply DB --local",
 		"db:migrate:remote": "wrangler d1 migrations apply DB --remote",
 		"inbox": "wrangler dev --config wrangler.inbox.jsonc --ip 127.0.0.1 --port 8789",
-		"test": "node --experimental-strip-types --test tests/*.test.mjs"
+		"test": "node --experimental-strip-types --test tests/*.test.mjs",
+		"test:browser": "playwright test",
+		"verify": "npm run check && npm run lint && npm test && npm run build"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "5.20260920.1",
 		"@eslint/compat": "^1.4.1",
 		"@eslint/js": "^9.39.5",
+		"@playwright/test": "^1.63.0",
 		"@sveltejs/adapter-cloudflare": "^7.2.9",
 		"@sveltejs/kit": "^2.70.3",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",

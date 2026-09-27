@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DotSurface from '$lib/components/DotSurface.svelte';
 	import { onMount } from 'svelte';
 	let track: HTMLDivElement;
 	let canvas: HTMLCanvasElement;
@@ -115,6 +116,7 @@
 </script>
 
 <div class="business-signoff">
+	<DotSurface dark />
 	<span>My software business</span>
 	<div class="runner-track" bind:this={track} aria-hidden="true">
 		<canvas bind:this={canvas}></canvas>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DotSurface from '$lib/components/DotSurface.svelte';
 	import SectionComposition from '$lib/components/SectionComposition.svelte';
 	import { onMount } from 'svelte';
 	import InlineMarkdown from '$lib/components/InlineMarkdown.svelte';
@@ -42,6 +43,7 @@
 	class="activity-section"
 	aria-labelledby="activity-title"
 >
+	<DotSurface dark />
 	<div class="activity-art"><span aria-hidden="true">GIT<br />HUB</span><i></i><b></b></div>
 	<span class="square-field activity-squares" aria-hidden="true"></span>
 	<div class="activity-heading">

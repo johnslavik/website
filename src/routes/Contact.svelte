@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DotSurface from '$lib/components/DotSurface.svelte';
 	import { onMount } from 'svelte';
 	import type { Component } from 'svelte';
 	import TechFrame from '$lib/components/TechFrame.svelte';
@@ -41,6 +42,7 @@
 </script>
 
 <section bind:this={section} id="contact" class="contact-section" aria-labelledby="contact-title">
+	<DotSurface dark />
 	<span class="contact-outline"></span><span class="square-field contact-squares" aria-hidden="true"
 	></span>
 	<div class="contact-heading">

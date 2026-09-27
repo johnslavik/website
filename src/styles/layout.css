@@ -3225,12 +3225,12 @@ figcaption {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-	main > section:not(.hero) > :not(.section-composition) {
+	main > section:not(.hero) > :not(.section-composition):not(.dot-surface) {
 		transition:
 			opacity 550ms ease,
 			translate 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
 	}
-	main > section.section-pending > :not(.section-composition) {
+	main > section.section-pending > :not(.section-composition):not(.dot-surface) {
 		opacity: 0;
 		translate: 0 24px;
 	}
@@ -3288,7 +3288,7 @@ figcaption {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-	main > #activity > :not(.section-composition) {
+	main > #activity > :not(.section-composition):not(.dot-surface) {
 		opacity: var(--section-reveal, 1);
 		translate: 0 calc((1 - var(--section-reveal, 1)) * 24px);
 		transition: none;
@@ -3537,4 +3537,39 @@ figcaption {
 }
 .activity-item:first-child {
 	background-size: auto, var(--dot-field-size);
+}
+
+/* One continuous surface replaces the old scattered decorative fields. */
+.composition-grain,
+.square-field,
+.activity-heading::after,
+.contact-panel::after,
+.site-footer::after,
+.talks-section::after,
+.talks-texture {
+	display: none;
+}
+.activity-item:first-child {
+	background-image: none;
+}
+.hero,
+.activity-section,
+.talks-section,
+.contact-section {
+	isolation: isolate;
+}
+.site-footer::before,
+.business-signoff::before {
+	z-index: -2;
+}
+main > section > .dot-surface {
+	transition: none;
+	translate: none;
+}
+main > section.section-pending > .dot-surface {
+	opacity: 0.065;
+	translate: none;
+}
+main > section.section-pending > .dot-surface.dark {
+	opacity: 0.12;
 }

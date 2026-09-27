@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DotSurface from '$lib/components/DotSurface.svelte';
 	import SectionComposition from '$lib/components/SectionComposition.svelte';
 	const recordings = [
 		{
@@ -74,6 +75,7 @@
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <section id="talks" class="talks-section" aria-labelledby="talks-title">
+	<DotSurface />
 	<div class="talks-heading">
 		<h2 id="talks-title">Talks</h2>
 		<span class="talks-piece"></span>

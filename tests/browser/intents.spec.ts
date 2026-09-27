@@ -1,0 +1,129 @@
+import { test, expect } from '@playwright/test';
+
+test.beforeEach(async ({ page }) => {
+	await page.route('**/api/activity*', (route) =>
+		route.fulfill({
+			json: {
+				items: [
+					{
+						repo: 'python/cpython',
+						title: 'Example contribution',
+						url: 'https://github.com/python/cpython/pull/12',
+						date: '2026-09-27T12:00:00Z'
+					}
+				],
+				cached: false
+			}
+		})
+	);
+});
+for (const width of [320, 390, 768, 1280, 1920]) {
+	test(`layout and dot invariants at ${width}px`, async ({ page }) => {
+		await page.setViewportSize({ width, height: 900 });
+		await page.goto('/');
+		await expect(page.locator('.dot-surface svg').first()).toHaveAttribute('width', /[1-9]/);
+		const links = page.locator('.section-index a');
+		const padding = await links.evaluateAll((items) =>
+			items.map((e) => getComputedStyle(e).padding)
+		);
+		expect(new Set(padding).size).toBe(1);
+		expect(parseFloat(padding[0].split(' ')[1])).toBeGreaterThan(0);
+		for (const section of ['#main', '#activity', '#talks', '#contact']) {
+			await page.locator(section).scrollIntoViewIfNeeded();
+			expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+				true
+			);
+		}
+		const fields = await page.locator('.dot-surface').evaluateAll((items) =>
+			items.map((e) => {
+				const svg = e.querySelector('svg')!;
+				return {
+					width: Number(svg.getAttribute('width')),
+					height: Number(svg.getAttribute('height')),
+					viewBox: svg.getAttribute('viewBox'),
+					events: getComputedStyle(e).pointerEvents,
+					opacity: Number(getComputedStyle(e).opacity)
+				};
+			})
+		);
+		expect(fields.length).toBe(6);
+		for (const f of fields) {
+			expect(f.width % 7).toBe(0);
+			expect(f.height % 7).toBe(0);
+			expect(f.viewBox).toBeNull();
+			expect(f.events).toBe('none');
+			expect(f.opacity).toBeGreaterThan(0);
+			expect(f.opacity).toBeLessThanOrEqual(0.15);
+		}
+		await expect(page.locator('.composition-grain').first()).toBeHidden();
+		if (width <= 767) {
+			await expect(page.locator('.runner-track')).toBeHidden();
+			expect(await page.locator('[data-puzzle]').count()).toBe(0);
+		}
+	});
+}
+test('navigation docks immediately after its anchor passes above the viewport', async ({
+	page
+}) => {
+	await page.setViewportSize({ width: 1280, height: 800 });
+	await page.goto('/');
+	await expect(page.locator('.section-dock')).toHaveAttribute('inert', '');
+	await page.locator('.nav-anchor').evaluate((e) =>
+		window.scrollTo({
+			top: e.getBoundingClientRect().top + window.scrollY + 2,
+			behavior: 'instant'
+		})
+	);
+	await expect(page.locator('.section-dock')).not.toHaveAttribute('inert', '');
+});
+test('content, links and all talk covers preserve the agreed intent', async ({ page }) => {
+	await page.goto('/');
+	await expect(page.locator('.hero')).not.toContainText('nawczoraj.com');
+	await expect(page.locator('.business-signoff')).toContainText('nawczoraj.com');
+	await expect(page.locator('.activity-intro')).toHaveText(
+		'These days, I mostly contribute to CPython and Apache Magpie.'
+	);
+	await expect(page.getByRole('link', { name: 'View GitHub profile', exact: true })).toBeVisible();
+	await expect(page.locator('.talk-cover img')).toHaveCount(5);
+	const external = await page
+		.locator('a[href^="https://"]')
+		.evaluateAll((items) =>
+			items.map((e) => ({ target: e.getAttribute('target'), rel: e.getAttribute('rel') }))
+		);
+	for (const link of external) {
+		expect(link.target).toBe('_blank');
+		expect(link.rel).toContain('noopener');
+	}
+	await expect(page.getByRole('link', { name: 'Privacy policy', exact: true })).toHaveAttribute(
+		'href',
+		'/privacy'
+	);
+});
+test('reduced motion suppresses the runner and keeps navigation usable', async ({ page }) => {
+	await page.emulateMedia({ reducedMotion: 'reduce' });
+	await page.goto('/');
+	await page.locator('#contact').scrollIntoViewIfNeeded();
+	await expect(page.locator('.runner-track')).toBeHidden();
+	expect(
+		await page
+			.locator('.section-dock a')
+			.first()
+			.evaluate((e) => getComputedStyle(e).transitionDuration)
+	).toBe('0s');
+	await expect(page.getByRole('button', { name: 'Send a message', exact: true })).toBeVisible();
+});
+test('contact code loads on approach and message mode stays compact', async ({ page }) => {
+	await page.setViewportSize({ width: 1280, height: 800 });
+	await page.goto('/');
+	await expect(page.locator('#contact')).toContainText('Loading contact form');
+	await page.locator('#contact').scrollIntoViewIfNeeded();
+	await page.getByRole('button', { name: 'Plan a call', exact: true }).click();
+	const callHeight = await page
+		.locator('.contact-panel')
+		.evaluate((e) => e.getBoundingClientRect().height);
+	await page.getByRole('button', { name: 'Send a message', exact: true }).click();
+	await expect(page.getByRole('textbox', { name: 'Message', exact: true })).toBeVisible();
+	expect(
+		await page.locator('.contact-panel').evaluate((e) => e.getBoundingClientRect().height)
+	).toBeLessThan(callHeight);
+});

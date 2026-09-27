@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { DOT, dotNoise as noise } from '$lib/dot-pattern';
+	import { DOT, dotNoise as noise, wholeSquareInBounds } from '$lib/dot-pattern';
 	let { reverse = false }: { reverse?: boolean } = $props();
 	let element: HTMLDivElement;
 	type Brick = { x: number; y: number; width: number; height: number; opacity: number };
 	let width = $state(0);
 	let height = $state(0);
 	let active = $state(false);
-	const tailHeight = $derived(Math.max(420, Math.min(760, width * 0.55)));
 	const pitch = DOT.pitch;
 	const courseHeight = pitch;
 	function smooth(value: number) {
@@ -45,38 +44,13 @@
 			};
 		});
 	});
-	const remnants = $derived.by(() => {
-		if (!active || !width || !height) return [];
-		const bricks: Brick[] = [];
-		const rows = Math.ceil(tailHeight / courseHeight);
-		for (let row = 0; row < rows; row++) {
-			const extent = width * 0.22 * (1 - smooth(row / rows));
-			const breadth = Math.ceil(extent / pitch);
-
-			for (let column = 0; column < breadth; column++) {
-				if (noise(column, row, 5) > 0.65) continue;
-				const size = DOT.size;
-				bricks.push({
-					x: column * pitch + (pitch - size) / 2,
-					y: row * courseHeight + (courseHeight - size) / 2,
-					width: size,
-					height: size,
-					opacity:
-						0.3 *
-						(0.4 + noise(column, row, 4) * 0.6) *
-						(1 - smooth(row / rows)) *
-						(1 - smooth((column * pitch) / Math.max(1, extent)))
-				});
-			}
-		}
-		return bricks;
-	});
-	function paths(dots: Brick[], flip = false) {
+	function paths(dots: Brick[], flip = false, travel = 0) {
 		const groups: Record<string, string[]> = {};
 		for (const dot of dots) {
 			const opacity = Math.round(dot.opacity * 24) / 24;
 			if (!opacity) continue;
 			const y = flip ? height - dot.y - dot.height : dot.y;
+			if (!wholeSquareInBounds(dot.x, y, dot.width, width, height, travel)) continue;
 			const path = `M${dot.x.toFixed(2)} ${y.toFixed(2)}h${dot.width.toFixed(2)}v${dot.height.toFixed(2)}h-${dot.width.toFixed(2)}Z`;
 			const group = groups[opacity] ?? [];
 			group.push(path);
@@ -146,19 +120,11 @@
 		<rect x="0" y={reverse ? -1 : height * 0.98} {width} height={height * 0.02 + 2} />
 		{#each courses as course, index (index)}
 			<g style={`transform: translateY(calc(var(--gather, 0) * ${-course.drift}px))`}>
-				{#each paths(course.bricks, reverse) as path (path.opacity)}<path {...path} />{/each}
+				{#each paths(course.bricks, reverse, course.drift) as path (path.opacity)}<path
+						{...path}
+					/>{/each}
 			</g>
 		{/each}
-	</svg>
-	<svg
-		class="masonry-remnants"
-		viewBox={`0 0 ${width || 1} ${tailHeight}`}
-		preserveAspectRatio="none"
-	>
-		{#each paths(remnants) as path (path.opacity)}<path {...path} />{/each}
-		<g transform={`translate(${width} 0) scale(-1 1)`} class="red-remnants">
-			{#each paths(remnants) as path (path.opacity)}<path {...path} />{/each}
-		</g>
 	</svg>
 </div>
 

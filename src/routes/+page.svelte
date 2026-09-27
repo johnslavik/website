@@ -1,9 +1,9 @@
 <script lang="ts">
+	import DotSurface from '$lib/components/DotSurface.svelte';
 	import { onMount } from 'svelte';
 	import { DOT_FIELD } from '$lib/dot-pattern';
 	import { resolve } from '$app/paths';
 	import SectionTransition from '$lib/components/SectionTransition.svelte';
-	import DotShadow from '$lib/components/DotShadow.svelte';
 	import TechFrame from '$lib/components/TechFrame.svelte';
 	import FooterRunner from '$lib/components/FooterRunner.svelte';
 	import SectionNav from '$lib/components/SectionNav.svelte';
@@ -134,9 +134,9 @@
 >
 	<main id="main">
 		<section class="hero" aria-labelledby="intro-title">
+			<DotSurface />
 			<About />
 			<figure class="portrait">
-				<DotShadow />
 				<div class="photo-frame">
 					<enhanced:img
 						src={Hero}
@@ -158,6 +158,7 @@
 	</main>
 	<FooterRunner />
 	<footer class="site-footer">
+		<DotSurface dark />
 		<Socials />
 		<nav class="footer-pages" aria-label="Site links">
 			<a href={resolve('/privacy')} target="_blank" rel="noopener noreferrer">Privacy policy</a><a
