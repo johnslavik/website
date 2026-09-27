@@ -46,7 +46,7 @@ for (const width of [320, 390, 768, 1280, 1920]) {
 				};
 			})
 		);
-		expect(fields.length).toBe(6);
+		expect(fields.length).toBe(9);
 		for (const f of fields) {
 			expect(f.width % 7).toBe(0);
 			expect(f.height % 7).toBe(0);
@@ -126,4 +126,31 @@ test('contact code loads on approach and message mode stays compact', async ({ p
 	expect(
 		await page.locator('.contact-panel').evaluate((e) => e.getBoundingClientRect().height)
 	).toBeLessThan(callHeight);
+});
+
+// Surface presence alone did not catch the previously empty transition tails.
+test('texture covers transitions and light surfaces remain perceptible', async ({ page }) => {
+	await page.goto('/');
+	for (const selector of ['.hero', '#activity', '#talks', '#contact', '.section-transition']) {
+		const parents = page.locator(selector);
+		for (const parent of await parents.all()) {
+			await parent.scrollIntoViewIfNeeded();
+			const layer = parent.locator(':scope > .dot-surface');
+			await expect(layer).toHaveCount(1);
+			await expect
+				.poll(async () =>
+					layer.evaluate((e) => {
+						const rect = e.querySelector('svg')!.getBoundingClientRect();
+						return e.parentElement!.getBoundingClientRect().height - rect.height;
+					})
+				)
+				.toBeLessThan(7.01);
+			expect(await layer.evaluate((e) => getComputedStyle(e).display)).not.toBe('none');
+		}
+	}
+	for (const selector of ['.hero > .dot-surface', '#talks > .dot-surface']) {
+		expect(
+			await page.locator(selector).evaluate((e) => Number(getComputedStyle(e).opacity))
+		).toBeGreaterThanOrEqual(0.12);
+	}
 });

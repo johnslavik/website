@@ -3567,9 +3567,17 @@ main > section > .dot-surface {
 	translate: none;
 }
 main > section.section-pending > .dot-surface {
-	opacity: 0.065;
+	opacity: 0.14;
 	translate: none;
 }
 main > section.section-pending > .dot-surface.dark {
 	opacity: 0.12;
+}
+
+/* Carry the fine surface texture through the entire transition, including its solid tail. */
+.section-transition > .dot-surface {
+	z-index: 1;
+	color: #fff;
+	opacity: 0.075;
+	mix-blend-mode: difference;
 }

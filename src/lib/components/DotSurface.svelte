@@ -81,7 +81,7 @@
 		pointer-events: none;
 		z-index: -1;
 		color: #171717;
-		opacity: 0.065;
+		opacity: 0.14;
 	}
 	.dark {
 		color: #888;

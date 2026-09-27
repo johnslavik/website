@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import DotSurface from './DotSurface.svelte';
 	import { DOT, dotNoise as noise, wholeSquareInBounds } from '$lib/dot-pattern';
 	let { reverse = false }: { reverse?: boolean } = $props();
 	let element: HTMLDivElement;
@@ -116,6 +117,7 @@
 </script>
 
 <div class="section-transition" class:reverse bind:this={element} aria-hidden="true">
+	<DotSurface />
 	<svg class="masonry" viewBox={`0 0 ${width || 1} ${height || 1}`} preserveAspectRatio="none">
 		<rect x="0" y={reverse ? -1 : height * 0.98} {width} height={height * 0.02 + 2} />
 		{#each courses as course, index (index)}
