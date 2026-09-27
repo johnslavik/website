@@ -46,6 +46,7 @@
 	aria-hidden={!docked}
 	inert={!docked}
 >
+	<a class="back-to-top" href="#main" aria-label="Back to top">↑</a>
 	{#each links as link (link.id)}<a
 			href={'#' + link.id}
 			class:active={active === link.id}
@@ -111,6 +112,15 @@
 			transform 160ms cubic-bezier(0.76, 0, 0.24, 1),
 			opacity 180ms,
 			background 160ms;
+	}
+	.section-dock a.back-to-top {
+		writing-mode: horizontal-tb;
+		text-align: center;
+		font-size: 22px;
+		line-height: 1;
+		padding: 11px;
+		min-height: 44px;
+		flex: 0 0 auto;
 	}
 	.section-dock.docked {
 		pointer-events: auto;

@@ -75,6 +75,12 @@ test('navigation docks immediately after its anchor passes above the viewport', 
 		})
 	);
 	await expect(page.locator('.section-dock')).not.toHaveAttribute('inert', '');
+	await page
+		.locator('.section-dock')
+		.getByRole('link', { name: 'Back to top', exact: true })
+		.click();
+	await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(2);
+	await expect(page.locator('.section-dock')).toHaveAttribute('inert', '');
 });
 test('content, links and all talk covers preserve the agreed intent', async ({ page }) => {
 	await page.goto('/');
