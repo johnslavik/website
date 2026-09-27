@@ -22,3 +22,23 @@ export function shadowPaths() {
 	}
 	return groups.map((paths, i) => ({ d: paths.join(''), opacity: 0.25 + i * 0.1 }));
 }
+
+// Fixed-size CSS background for the remaining section decorations. All variants
+// share geometry; only their ink changes. Never size these backgrounds to a container.
+export const DOT_FIELD = Object.freeze({ width: DOT.pitch * 92, height: DOT.pitch * 40 });
+export function dotFieldImage(color: string) {
+	const paths: string[] = [];
+	for (let row = 0; row < 40; row++) {
+		for (let column = 0; column < 92; column++) {
+			if (dotNoise(column, row) > 0.8) continue;
+			const x = column * DOT.pitch + (DOT.pitch - DOT.size) / 2;
+			const y = row * DOT.pitch + (DOT.pitch - DOT.size) / 2;
+			const opacity = (0.25 + dotNoise(column, row, 4) * 0.7) * (1 - column / 92) * (1 - row / 40);
+			paths.push(
+				`<path d="M${x} ${y}h${DOT.size}v${DOT.size}h-${DOT.size}Z" opacity="${opacity.toFixed(3)}"/>`
+			);
+		}
+	}
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${DOT_FIELD.width}" height="${DOT_FIELD.height}"><g fill="${color}">${paths.join('')}</g></svg>`;
+	return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}

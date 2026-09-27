@@ -3521,3 +3521,20 @@ figcaption {
 		top: 16px;
 	}
 }
+
+/* A single fixed-pixel scale for every decorative dot field, including pseudo-elements.
+   Container dimensions crop/repeat the field; they never resize its cells. */
+.square-field,
+.talks-texture,
+.site-header::before,
+.portrait::after,
+.activity-heading::after,
+.contact-panel::after,
+.site-footer::after,
+.composition-grain,
+.talks-section::after {
+	background-size: var(--dot-field-size);
+}
+.activity-item:first-child {
+	background-size: auto, var(--dot-field-size);
+}

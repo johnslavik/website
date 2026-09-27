@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { DOT_FIELD } from '$lib/dot-pattern';
 	import { resolve } from '$app/paths';
 	import SectionTransition from '$lib/components/SectionTransition.svelte';
 	import DotShadow from '$lib/components/DotShadow.svelte';
@@ -126,7 +127,11 @@
 </svelte:head>
 
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="site-shell" bind:this={shell}>
+<div
+	class="site-shell"
+	bind:this={shell}
+	style:--dot-field-size={`${DOT_FIELD.width}px ${DOT_FIELD.height}px`}
+>
 	<main id="main">
 		<section class="hero" aria-labelledby="intro-title">
 			<About />
