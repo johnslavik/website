@@ -1,5 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { replaceState } from '$app/navigation';
+	import { page } from '$app/state';
+	import { sectionNavigation } from '$lib/section-navigation';
+	// Fixed navigation must live outside section isolation/animation stacking contexts.
+	function portal(node: HTMLElement) {
+		document.body.appendChild(node);
+		return {
+			destroy() {
+				node.remove();
+			}
+		};
+	}
 	let anchor: HTMLSpanElement;
 	let docked = $state(false);
 	let active = $state('');
@@ -9,26 +21,38 @@
 		{ id: 'contact', title: 'Get in touch' }
 	];
 	onMount(() => {
-		const dockObserver = new IntersectionObserver(
-			([entry]) => {
-				docked = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-			},
-			{ threshold: 0 }
-		);
-		const sectionObserver = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) if (entry.isIntersecting) active = entry.target.id;
-			},
-			{ rootMargin: '-20% 0px -55% 0px' }
-		);
-		dockObserver.observe(anchor);
-		for (const link of links) {
-			const section = document.getElementById(link.id);
-			if (section) sectionObserver.observe(section);
+		const sections = links
+			.map((link) => document.getElementById(link.id))
+			.filter((section): section is HTMLElement => !!section);
+		let frame = 0;
+		function update() {
+			frame = 0;
+			const next = sectionNavigation(
+				anchor.getBoundingClientRect().top,
+				sections.map((section) => ({ id: section.id, top: section.getBoundingClientRect().top })),
+				innerHeight
+			);
+			docked = next.docked;
+			active = next.active;
+			if (location.hash !== `#${active}`) {
+				const url = new URL(location.href);
+				url.hash = active;
+				replaceState(url, page.state);
+			}
 		}
+		function schedule() {
+			if (!frame) frame = requestAnimationFrame(update);
+		}
+		addEventListener('scroll', schedule, { passive: true });
+		addEventListener('resize', schedule);
+		const observer = new ResizeObserver(schedule);
+		for (const section of sections) observer.observe(section);
+		schedule();
 		return () => {
-			dockObserver.disconnect();
-			sectionObserver.disconnect();
+			cancelAnimationFrame(frame);
+			observer.disconnect();
+			removeEventListener('scroll', schedule);
+			removeEventListener('resize', schedule);
 		};
 	});
 </script>
@@ -40,6 +64,7 @@
 	</nav>
 </div>
 <nav
+	use:portal
 	class="section-dock"
 	class:docked
 	aria-label="Section navigation"

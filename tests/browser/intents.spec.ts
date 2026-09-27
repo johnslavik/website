@@ -53,7 +53,7 @@ for (const width of [320, 390, 768, 1280, 1920]) {
 			expect(f.viewBox).toBeNull();
 			expect(f.events).toBe('none');
 			expect(f.opacity).toBeGreaterThan(0);
-			expect(f.opacity).toBeLessThanOrEqual(0.15);
+			expect(f.opacity).toBeLessThanOrEqual(0.25);
 		}
 		await expect(page.locator('.composition-grain').first()).toBeHidden();
 		if (width <= 767) {
@@ -162,6 +162,68 @@ test('texture covers transitions and light surfaces remain perceptible', async (
 	for (const selector of ['.hero > .dot-surface', '#talks > .dot-surface']) {
 		expect(
 			await page.locator(selector).evaluate((e) => Number(getComputedStyle(e).opacity))
-		).toBeGreaterThanOrEqual(0.12);
+		).toBeGreaterThanOrEqual(0.2);
 	}
+});
+
+test('entering sections synchronizes the URL without adding history entries', async ({ page }) => {
+	await page.setViewportSize({ width: 1280, height: 800 });
+	await page.goto('/');
+	const historyLength = await page.evaluate(() => history.length);
+	await page.locator('#activity').evaluate((e) =>
+		window.scrollTo({
+			top: e.getBoundingClientRect().top + scrollY - innerHeight * 0.8,
+			behavior: 'instant'
+		})
+	);
+	await expect(page.locator('.section-dock')).not.toHaveAttribute('inert', '');
+	for (const id of ['activity', 'talks', 'contact']) {
+		await page
+			.locator(`#${id}`)
+			.evaluate((e) =>
+				window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - 100, behavior: 'instant' })
+			);
+		await expect.poll(() => page.evaluate(() => location.hash)).toBe(`#${id}`);
+		await expect(page.locator(`.section-dock a[href="#${id}"]`)).toHaveAttribute(
+			'aria-current',
+			'location'
+		);
+	}
+	expect(await page.evaluate(() => history.length)).toBe(historyLength);
+});
+
+test('every dock block remains unobscured above every section', async ({ page }) => {
+	for (const width of [390, 1280]) {
+		await page.setViewportSize({ width, height: 800 });
+		await page.goto('/');
+		for (const id of ['activity', 'talks', 'contact']) {
+			await page.locator(`#${id}`).evaluate((e) =>
+				window.scrollTo({
+					top: e.getBoundingClientRect().top + scrollY - 60,
+					behavior: 'instant'
+				})
+			);
+			const dock = page.locator('.section-dock');
+			await expect(dock).not.toHaveAttribute('inert', '');
+			for (const link of await dock.locator('a').all()) {
+				await expect
+					.poll(() =>
+						link.evaluate((e) => {
+							const r = e.getBoundingClientRect();
+							const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+							return hit === e || e.contains(hit);
+						})
+					)
+					.toBe(true);
+			}
+		}
+	}
+});
+
+test('direct section links retain their destination on initial load', async ({ page }) => {
+	await page.goto('/#talks');
+	await expect.poll(() => page.evaluate(() => location.hash)).toBe('#talks');
+	await expect
+		.poll(() => page.locator('#talks').evaluate((e) => Math.abs(e.getBoundingClientRect().top)))
+		.toBeLessThan(150);
 });

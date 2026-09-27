@@ -2358,7 +2358,7 @@ figcaption {
 	display: none;
 }
 .composition-step {
-	opacity: 0.14;
+	opacity: 0.24;
 	border-width: 32px;
 }
 .composition-frame,
@@ -3061,12 +3061,12 @@ figcaption {
 	opacity: 0.5;
 }
 .transition-tail {
-	opacity: 0.075;
+	opacity: 0.12;
 }
 .transition-tail-red {
 	left: 12%;
 	width: 72%;
-	opacity: 0.075;
+	opacity: 0.12;
 }
 
 .transition-grid,
@@ -3126,7 +3126,7 @@ figcaption {
 		76% 14%
 	);
 	transform: translateY(calc(var(--shift) * 0.35));
-	opacity: 0.14;
+	opacity: 0.24;
 }
 @media (prefers-reduced-motion: reduce) {
 	.section-transition * {
@@ -3567,7 +3567,7 @@ main > section > .dot-surface {
 	translate: none;
 }
 main > section.section-pending > .dot-surface {
-	opacity: 0.14;
+	opacity: 0.24;
 	translate: none;
 }
 main > section.section-pending > .dot-surface.dark {
@@ -3578,6 +3578,6 @@ main > section.section-pending > .dot-surface.dark {
 .site-shell .section-transition > .dot-surface {
 	z-index: 1;
 	color: #fff;
-	opacity: 0.075;
+	opacity: 0.12;
 	mix-blend-mode: difference;
 }
